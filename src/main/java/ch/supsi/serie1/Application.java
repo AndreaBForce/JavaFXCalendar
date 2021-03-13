@@ -15,7 +15,7 @@ public class Application {
         courses.get(0).addStudent(new Student("Simon", "Wave","24-08-1999"));
         courses.get(1).addStudent(new Student("Simon", "Wave","08-11-2000"));
         courses.get(2).addStudent(new Student("Simon", "Wave","24-12-1998"));
-        courses.get(2).addStudent(new Student("Giuseppe", "Borsello","23-6-1996"));
+        courses.get(2).addStudent(new Student("Giuseppe", "Borsello","23-06-1996"));
 
         courses.stream().forEach(c -> c.print());
     }
