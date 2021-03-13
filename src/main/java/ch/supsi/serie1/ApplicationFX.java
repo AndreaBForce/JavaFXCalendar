@@ -18,12 +18,12 @@ public class ApplicationFX extends Application{
         courses.add(new Course("Algebra"));
         courses.add(new Course("Fisica"));
 
-        courses.get(0).addStudent(new Student("Paolo", "Frassini"));
-        courses.get(0).addStudent(new Student("Franco", "Giorgino"));
-        courses.get(0).addStudent(new Student("Simon", "Wave"));
-        courses.get(1).addStudent(new Student("Simon", "Wave"));
-        courses.get(2).addStudent(new Student("Simon", "Wave"));
-        courses.get(2).addStudent(new Student("Giuseppe", "Borsello"));
+        courses.get(0).addStudent(new Student("Paolo", "Frassini","05-02-2000"));
+        courses.get(0).addStudent(new Student("Franco", "Giorgino","15-05-1997"));
+        courses.get(0).addStudent(new Student("Simon", "Wave","24-08-1999"));
+        courses.get(1).addStudent(new Student("Simon", "Wave","08-11-2000"));
+        courses.get(2).addStudent(new Student("Simon", "Wave","24-12-1998"));
+        courses.get(2).addStudent(new Student("Giuseppe", "Borsello","23-06-1996"));
 
         return courses;
     }
