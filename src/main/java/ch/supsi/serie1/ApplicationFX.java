@@ -2,9 +2,11 @@ package ch.supsi.serie1;
 
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class ApplicationFX extends Application{
 
     @Override
     public void start(Stage stage) throws Exception{
-        stage.setTitle("Serie1");
+        stage.setTitle("Serie2");
 
         List<Course> courses = createList();
 
@@ -45,6 +47,9 @@ public class ApplicationFX extends Application{
         studentListView.setMaxSize(200,300);
         courseListView.setMaxSize(200,300);
 
+        courseListView.setStyle("-fx-selection-bar: blue;");
+        studentListView.setStyle("-fx-background-color: green;");
+
         stage.setScene(new Scene(root,400,300));
         stage.show();
 
@@ -54,7 +59,9 @@ public class ApplicationFX extends Application{
             }
 
             studentListView.getItems().addAll(t1.getStudents());
+
         });
+
     }
 
     public static void main(String[] args) {
