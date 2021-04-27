@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ch.supsi.project.AGGIORNARE</mainClass>
+                            <mainClass>ch.supsi.project.Gui</mainClass>
                         </manifest>
                     </archive>
 
