@@ -1,37 +1,33 @@
 package ch.supsi.project;
 
+import ch.supsi.project.service_layer.EventType;
 import javafx.application.Application;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 public class Gui extends Application {
@@ -62,7 +58,25 @@ public class Gui extends Application {
 
 
                 Stage modalStage = new Stage();
+                modalStage.setAlwaysOnTop(true);
+
                 GridPane modal = new GridPane();
+                modal.setHgap(10);
+                modal.setVgap(10);
+                modal.setPadding(new Insets(10, 10, 10, 10));
+                modal.setGridLinesVisible(true);
+
+                for (int i = 0; i < 2; i++) {
+                    ColumnConstraints colConst = new ColumnConstraints();
+                    colConst.setPercentWidth(100.0 / 2);
+                    modal.getColumnConstraints().add(colConst);
+                }
+                for (int i = 0; i < 3; i++) {
+                    RowConstraints rowConst = new RowConstraints();
+                    rowConst.setPercentHeight(100.0 / 3);
+                    modal.getRowConstraints().add(rowConst);
+                }
+
                 modalStage.setScene(new Scene(modal, 300, 400));
                 modalStage.setTitle("My modal window");
                 modalStage.initModality(Modality.WINDOW_MODAL);
@@ -71,14 +85,13 @@ public class Gui extends Application {
                 //modalStage.initOwner(((Node)event.getSource()).getScene().getWindow() );
 
                 TextField nomeEventoInput = new TextField();
-                Label nomeEvento = new Label();
-                nomeEvento.setText("test");
+                Label nomeEvento = new Label("Nome evento");
+                DatePicker datepicker = new DatePicker();
 
-                modal.setAlignment(Pos.TOP_LEFT);
-                modal.getChildren().add(nomeEventoInput);
-                modal.setAlignment(Pos.TOP_RIGHT);
-                modal.getChildren().add(nomeEvento);
 
+                modal.add(nomeEvento, 0, 0);
+                modal.add(nomeEventoInput, 1, 0);
+                modal.add(datepicker, 1, 1);
 
                 modalStage.show();
             });
