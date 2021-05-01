@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -33,6 +34,7 @@ import java.time.LocalDate;
 
 
 public class Gui extends Application {
+    static LocalDate dataOra = LocalDate.now();
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -114,11 +116,11 @@ public class Gui extends Application {
         //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
         try {
             //setto titolo come slide
-            LocalDate dataOra = LocalDate.now();
-            stage.setTitle("Finestra principale calendario ("+dataOra.getMonth().toString().substring(0,1)+""+dataOra.getMonth().toString().substring(1).toLowerCase()+" "+ dataOra.getYear()+")");
+
+            stage.setTitle("Finestra principale calendario (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
             //Inizializzo border pane
             BorderPane root = new BorderPane();
-            root.setPrefSize(900,700);
+            root.setPrefSize(900, 700);
 
             //creo hbox top con il menu top
             HBox top = new HBox();
@@ -136,10 +138,10 @@ public class Gui extends Application {
 
             //Menu tendina edit -> new.. edit->previous edit->next
             Menu menuEdit = new Menu("Edit");
-            MenuItem menuNew= new MenuItem("New...");
-            MenuItem menuPrev= new MenuItem("Previous");
-            MenuItem menuNext= new MenuItem("Next");
-            menuEdit.getItems().addAll(menuNew,menuPrev,menuNext);
+            MenuItem menuNew = new MenuItem("New...");
+            MenuItem menuPrev = new MenuItem("Previous");
+            MenuItem menuNext = new MenuItem("Next");
+            menuEdit.getItems().addAll(menuNew, menuPrev, menuNext);
             MenuBar menuBar2 = new MenuBar();
             menuBar2.getMenus().add(menuEdit);
 
@@ -152,7 +154,7 @@ public class Gui extends Application {
             menuBar3.getMenus().add(menuHelp);
 
             //aggiungo il menubar alla parte top del socio
-            top.getChildren().addAll(menuBar1,menuBar2,menuBar3);
+            top.getChildren().addAll(menuBar1, menuBar2, menuBar3);
             root.setTop(top);
 
             //Creo bottoni
@@ -164,108 +166,153 @@ public class Gui extends Application {
             Button monthNext = new Button();
             Label monthCurrent = new Label();
 
-            monthCurrent.setText(dataOra.getMonth().toString()+" "+dataOra.getYear());
+            monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
             monthCurrent.setFont(new Font("Arial", 20));
 
             monthNext.setText(">>");
             monthPrev.setText("<<");
 
-            centerMen.getChildren().addAll(monthPrev,monthCurrent,monthNext);
+            centerMen.getChildren().addAll(monthPrev, monthCurrent, monthNext);
             centerMen.setAlignment(Pos.TOP_CENTER);
 
 
             //Creo calendario
-            BorderPane setupCalendario  = new BorderPane();
+            BorderPane setupCalendario = new BorderPane();
             //setup giorni settimana
             HBox giorni = new HBox();
 
             Label lun = new Label();
             lun.setText("Monday");
-            lun.setFont(new Font("Arial", 15));
+            lun.setFont(new Font("Arial", 12));
 
             Label dom = new Label();
             dom.setText("Sunday");
-            dom.setFont(new Font("Arial", 15));
+            dom.setFont(new Font("Arial", 12));
 
             Label mart = new Label();
             mart.setText("Tuesday");
-            mart.setFont(new Font("Arial", 15));
+            mart.setFont(new Font("Arial", 12));
 
             Label merc = new Label();
             merc.setText("Wednesday");
-            merc.setFont(new Font("Arial", 15));
+            merc.setFont(new Font("Arial", 12));
 
             Label giov = new Label();
             giov.setText("Thursday");
-            giov.setFont(new Font("Arial", 15));
+            giov.setFont(new Font("Arial", 12));
 
             Label vene = new Label();
             vene.setText("Friday");
-            vene.setFont(new Font("Arial", 15));
+            vene.setFont(new Font("Arial", 12));
 
             Label sab = new Label();
             sab.setText("Saturday");
-            sab.setFont(new Font("Arial", 15));
+            sab.setFont(new Font("Arial", 12));
 
             giorni.setAlignment(Pos.CENTER);
-            giorni.setSpacing(40);
-            giorni.getChildren().addAll(dom,lun,mart,merc,giov,vene,sab);
+            giorni.setSpacing(50);
+            giorni.getChildren().addAll(dom, lun, mart, merc, giov, vene, sab);
 
             setupCalendario.setTop(giorni);
 
-            GridPane calendar = new GridPane();
+            //PARTE GESTIONE EVENTI
 
-
-            double s = 100; // side of rectangle
-
-            LocalDate start = dataOra.withDayOfMonth(1);
-
-            int dayofWeek = start.getDayOfWeek().getValue();
-            int monthlen = start.lengthOfMonth();
-            int count = 1,datesettter = 1;
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 7; j++) {
-                    BorderPane casella = new BorderPane();
-                    BorderPane casella_text = new BorderPane();
-                    Label num_day = new Label();
-
-                    Rectangle r = new Rectangle(s, s, s, s);
-                    if(count <= dayofWeek){
-                        num_day.setText("");
-                    }else if(datesettter <= monthlen){
-                        num_day.setText("  "+(datesettter));
-                        datesettter++;
-                    }else{
-                        num_day.setText("");
-                    }
-                    count++;
-                    r.setFill(Color.WHITE);
-                    r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
-
-                    casella.setCenter(r);
-                    num_day.setAlignment(Pos.TOP_LEFT);
-
-                    casella_text.setTop(num_day);
-                    StackPane cella = new StackPane(casella,casella_text);
-                    calendar.add(cella, j, i);
+            //GESTIONE DELLA ROBA DEL FORM
+            EventHandler<MouseEvent> clickHandleCasella = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    System.out.println("PREMUTO ILTASTO");
                 }
-            }
-            calendar.setAlignment(Pos.TOP_CENTER);
+            };
 
-            setupCalendario.setCenter(calendar);
+            EventHandler<MouseEvent> clickNextMonth = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    dataOra = dataOra.plusMonths(1);
+                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    setupCalendario.setCenter(updateCalendario());
+                }
+            };
+
+            EventHandler<MouseEvent> clickPrevMonth = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    dataOra = dataOra.minusMonths(1);
+                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    setupCalendario.setCenter(updateCalendario());
+                }
+            };
+
+            monthNext.setOnMouseClicked(clickNextMonth);
+            monthPrev.setOnMouseClicked(clickPrevMonth);
+
+            //Qua avviene la creazione del calendario
+            setupCalendario.setCenter(updateCalendario());
 
             root.setCenter(centerMen);
             root.setBottom(setupCalendario);
 
-            Scene scene = new Scene(root, 770, 600);
+            Scene scene = new Scene(root, 720, 720);
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
 
+    //metodo che crea e update il calendario
+    public GridPane updateCalendario() {
+        GridPane calendar = new GridPane();
+
+        double s = 100; // side of rectangle
+        LocalDate start = dataOra.withDayOfMonth(1);
+        int dayofWeek = start.getDayOfWeek().getValue();
+        int monthlen = start.lengthOfMonth();
+        int count = 1, datesettter = 1;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 7; j++) {
+                BorderPane casella = new BorderPane();
+                BorderPane casella_text = new BorderPane();
+                Label num_day = new Label();
+
+                Rectangle r = new Rectangle(s, s, s, s);
+
+                if(dayofWeek == 7){
+                    if (datesettter <= monthlen) {
+                        num_day.setText("  " + (datesettter));
+                        datesettter++;
+                    }
+                }else {
+                    if (count <= dayofWeek) {
+                        num_day.setText("");
+                    } else if (datesettter <= monthlen) {
+                        num_day.setText("  " + (datesettter));
+                        datesettter++;
+                    } else {
+                        num_day.setText("");
+                    }
+                }
+                count++;
+                r.setFill(Color.WHITE);
+                r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+
+                casella.setCenter(r);
+                num_day.setAlignment(Pos.TOP_LEFT);
+
+                casella_text.setTop(num_day);
+                StackPane cella = new StackPane(casella, casella_text);
+
+                //da metter qua dentro la gestione migliore della data
+                cella.setOnMouseClicked(mouseEvent -> System.out.println("PREMUTO"));
+
+                calendar.add(cella, j, i);
+            }
+        }
+
+        calendar.setAlignment(Pos.TOP_CENTER);
+        return calendar;
+    }
 
 
     public static void main(String[] args) {
