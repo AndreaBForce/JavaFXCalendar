@@ -1,36 +1,19 @@
 package ch.supsi.project;
 
-import ch.supsi.project.service_layer.EventType;
 import javafx.application.Application;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.skin.DatePickerSkin;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
-import java.sql.Date;
-import java.sql.SQLOutput;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 
