@@ -142,6 +142,7 @@ public class Gui extends Application {
             MenuItem menuNew = new MenuItem("New...");
             MenuItem menuPrev = new MenuItem("Previous");
             MenuItem menuNext = new MenuItem("Next");
+
             menuEdit.getItems().addAll(menuNew, menuPrev, menuNext);
             MenuBar menuBar2 = new MenuBar();
             menuBar2.getMenus().add(menuEdit);
@@ -247,22 +248,109 @@ public class Gui extends Application {
             monthNext.setOnMouseClicked(clickNextMonth);
             monthPrev.setOnMouseClicked(clickPrevMonth);
 
+            //action event dei menu
+            menuPrev.setOnAction(mouseEvent -> {
+                dataOra = dataOra.minusMonths(1);
+                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario());
+            });
+
+            //Sono gli action event dei menu
+            menuNext.setOnAction(mouseEvent -> {
+                dataOra = dataOra.plusMonths(1);
+                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario());
+            });
+
             //Qua avviene la creazione del calendario
             setupCalendario.setCenter(updateCalendario());
 
             root.setCenter(centerMen);
             root.setBottom(setupCalendario);
 
-            Scene scene = new Scene(root, 720, 720);
+            Scene scene = new Scene(root, 720, 700);
             stage.setScene(scene);
             stage.show();
+
+            //Creo parte per gestione del modale dell'exit
+            //quindi un bottone con sei sicuro di voler uscire
+            Stage exitStage = new Stage();
+            exitStage.setTitle("Confirm Exit");
+            exitStage.setAlwaysOnTop(true);
+            //borderpane padre
+            BorderPane exitBorder = new BorderPane();
+            //Label di sicurezza
+            Label sicuro = new Label();
+            sicuro.setText("Are you sure you want to exit?");
+            sicuro.setFont(new Font("Arial", 15));
+            sicuro.setAlignment(Pos.CENTER);
+            exitBorder.setTop(sicuro);
+            HBox exitButtons = new HBox();
+            Button exitAnnulla = new Button();
+            Button exitEsci = new Button();
+            exitEsci.setText("Exit");
+            exitAnnulla.setText("Cancel");
+            exitEsci.setStyle("-fx-background-color: #336699; ");
+
+            exitButtons.setSpacing(20);
+            exitAnnulla.setPrefSize(70,30);
+            exitEsci.setPrefSize(70,30);
+            exitButtons.getChildren().addAll(exitEsci,exitAnnulla);
+            exitButtons.setAlignment(Pos.CENTER);
+            exitBorder.setCenter(exitButtons);
+
+            Scene scenaE = new Scene(exitBorder,300,200);
+            menuExit.setOnAction(mouse -> {
+                exitStage.setScene(scenaE);
+                exitStage.show();
+            });
+
+            exitAnnulla.setOnMouseClicked(x -> {
+                exitStage.close();
+            });
+
+            exitEsci.setOnAction( x -> {
+                exitStage.close();
+                stage.close();
+            });
+
+            //Creo la parte della gestione della versione
+            Stage aboutStage = new Stage();
+            aboutStage.setTitle("About");
+            aboutStage.setAlwaysOnTop(true);
+            BorderPane borderAbout = new BorderPane();
+            VBox vbAbout = new VBox();
+
+            Label version = new Label();
+            Label dev = new Label();
+            Label rav = new Label();
+            Label ron = new Label();
+            Label ric = new Label();
+
+            version.setText("Current Version = 1.1");
+            dev.setText("Developed by: ");
+            rav.setText("Davide Ravani  davide.ravani@student.supsi.ch");
+            ron.setText("Lorenzo Ronzani  lorenzo.ronzani@student.supsi.ch");
+            ric.setText("Andrea Riccardi  andrea.riccardi@student.supsi.ch");
+
+            vbAbout.getChildren().addAll(dev,rav,ron,ric);
+            vbAbout.setAlignment(Pos.CENTER_LEFT);
+            version.setAlignment(Pos.CENTER_LEFT);
+            borderAbout.setTop(version);
+            borderAbout.setCenter(vbAbout);
+            Scene aboutScene = new Scene(borderAbout,400,100);
+
+            menuAbout.setOnAction(x -> {
+                aboutStage.setScene(aboutScene);
+                aboutStage.show();
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    //metodo che crea e update il calendario
+
     public GridPane updateCalendario() {
         GridPane calendar = new GridPane();
 
