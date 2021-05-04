@@ -1,5 +1,7 @@
 package ch.supsi.project;
 
+import ch.supsi.project.application_layer.Colour;
+import ch.supsi.project.application_layer.Type;
 import ch.supsi.project.service_layer.*;
 
 import java.util.ArrayList;
