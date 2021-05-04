@@ -1,7 +1,6 @@
 package ch.supsi.project.service_layer;
 
 import ch.supsi.project.application_layer.Colour;
-import ch.supsi.project.application_layer.Type;
 
 public class EventType {
     private final Type description;
