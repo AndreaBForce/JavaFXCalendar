@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.sql.Date;
+import java.sql.SQLOutput;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -303,8 +304,49 @@ public class Gui extends Application {
                 casella_text.setTop(num_day);
                 StackPane cella = new StackPane(casella, casella_text);
 
-                //da metter qua dentro la gestione migliore della data
-                cella.setOnMouseClicked(mouseEvent -> System.out.println("PREMUTO"));
+                if(!num_day.getText().equals("")){
+                    final LocalDate date = start.plusDays(datesettter-2);
+                    //da metter qua dentro la gestione migliore della data
+                    cella.setOnMouseClicked(mouseEvent -> {
+                        Stage modalStage = new Stage();
+                        modalStage.setAlwaysOnTop(true);
+
+                        GridPane modal = new GridPane();
+                        modal.setHgap(10);
+                        modal.setVgap(10);
+                        modal.setPadding(new Insets(10, 10, 10, 10));
+                        modal.setGridLinesVisible(true);
+
+                        for (int k = 0; k < 2; k++) {
+                            ColumnConstraints colConst = new ColumnConstraints();
+                            colConst.setPercentWidth(100.0 / 2);
+                            modal.getColumnConstraints().add(colConst);
+                        }
+                        for (int k = 0; k < 3; k++) {
+                            RowConstraints rowConst = new RowConstraints();
+                            rowConst.setPercentHeight(100.0 / 3);
+                            modal.getRowConstraints().add(rowConst);
+                        }
+
+                        modalStage.setScene(new Scene(modal, 300, 400));
+                        modalStage.setTitle(date.toString());
+                        modalStage.initModality(Modality.WINDOW_MODAL);
+
+                        //Controllare a cosa serve
+                        //modalStage.initOwner(((Node)event.getSource()).getScene().getWindow() );
+
+                        TextField nomeEventoInput = new TextField();
+                        Label nomeEvento = new Label("Nome evento");
+                        DatePicker datepicker = new DatePicker();
+
+
+                        modal.add(nomeEvento, 0, 0);
+                        modal.add(nomeEventoInput, 1, 0);
+                        modal.add(datepicker, 1, 1);
+
+                        modalStage.show();
+                    });
+                }
 
                 calendar.add(cella, j, i);
             }
