@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Gui extends Application {
+public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
     @Override
     public void start(Stage stage) throws Exception {
