@@ -1,7 +1,7 @@
 package ch.supsi.project.application_layer;
 
 public enum Colour {
-    BLUE("#0000FF"), RED("#FF0000"), GREEN("#00FF00"), ORANGE("#FFA500"), PURPLE("#800080");
+    BLUE("#A000FF"), RED("#FF0000"), GREEN("#00FF00"), ORANGE("#FFA500"), PURPLE("#800080");
     private final String hexCode;
 
     Colour(String hexCode) {

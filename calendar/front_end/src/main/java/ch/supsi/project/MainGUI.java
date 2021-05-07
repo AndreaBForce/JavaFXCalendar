@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,8 +29,14 @@ import java.util.List;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
+
     @Override
     public void start(Stage stage) throws Exception {
+        //VERSIONE DI BUILD (DA AGGIORNARE OGNI VOLTA)
+        //Sno i dati che compaiono nel about
+        String NUM_VERSION = "1.4.0";
+        String BUILD_DATE = "07-05-2021";
+        String APP_NAME = "CalendarioRRR";
 
         //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
         CalendarContainer calendario = new CalendarContainer("Prova.txt");
@@ -41,10 +48,11 @@ public class MainGUI extends Application {
         eventTypeList.add(new EventType(Type.HOLIDAY, Colour.ORANGE));
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
 
+
         Date time = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
-        cal.add(Calendar.HOUR_OF_DAY,3);
+        cal.add(Calendar.HOUR_OF_DAY, 3);
         long start = cal.getTime().getTime();
         cal.add(Calendar.HOUR_OF_DAY, 3);
         long end = cal.getTime().getTime();
@@ -227,13 +235,13 @@ public class MainGUI extends Application {
             exitEsci.setStyle("-fx-background-color: #336699; ");
 
             exitButtons.setSpacing(20);
-            exitAnnulla.setPrefSize(70,30);
-            exitEsci.setPrefSize(70,30);
-            exitButtons.getChildren().addAll(exitEsci,exitAnnulla);
+            exitAnnulla.setPrefSize(70, 30);
+            exitEsci.setPrefSize(70, 30);
+            exitButtons.getChildren().addAll(exitEsci, exitAnnulla);
             exitButtons.setAlignment(Pos.CENTER);
             exitBorder.setCenter(exitButtons);
 
-            Scene scenaE = new Scene(exitBorder,300,200);
+            Scene scenaE = new Scene(exitBorder, 300, 100);
             menuExit.setOnAction(mouse -> {
                 exitStage.setScene(scenaE);
                 exitStage.show();
@@ -243,7 +251,7 @@ public class MainGUI extends Application {
                 exitStage.close();
             });
 
-            exitEsci.setOnAction( x -> {
+            exitEsci.setOnAction(x -> {
                 exitStage.close();
                 stage.close();
             });
@@ -258,25 +266,34 @@ public class MainGUI extends Application {
             aboutStage.setAlwaysOnTop(true);
             BorderPane borderAbout = new BorderPane();
             VBox vbAbout = new VBox();
+            VBox appInfo = new VBox();
 
             Label version = new Label();
+            Label buildDate = new Label();
+            Label app_name = new Label();
+
             Label dev = new Label();
             Label rav = new Label();
             Label ron = new Label();
             Label ric = new Label();
 
-            version.setText("Current Version = 1.1");
+            version.setText("Current Version = " + NUM_VERSION);
+            buildDate.setText("Build date = " + BUILD_DATE);
+            app_name.setText("App name = " + APP_NAME);
+
             dev.setText("Developed by: ");
             rav.setText("Davide Ravani  davide.ravani@student.supsi.ch");
             ron.setText("Lorenzo Ronzani  lorenzo.ronzani@student.supsi.ch");
             ric.setText("Andrea Riccardi  andrea.riccardi@student.supsi.ch");
 
-            vbAbout.getChildren().addAll(dev,rav,ron,ric);
+            appInfo.getChildren().addAll(app_name, version, buildDate);
+            vbAbout.getChildren().addAll(dev, rav, ron, ric);
             vbAbout.setAlignment(Pos.CENTER_LEFT);
-            version.setAlignment(Pos.CENTER_LEFT);
-            borderAbout.setTop(version);
+            appInfo.setAlignment(Pos.CENTER_LEFT);
+
+            borderAbout.setTop(appInfo);
             borderAbout.setCenter(vbAbout);
-            Scene aboutScene = new Scene(borderAbout,300,100);
+            Scene aboutScene = new Scene(borderAbout, 400, 150);
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
@@ -302,8 +319,8 @@ public class MainGUI extends Application {
         int count = 1, datesettter = 1;
         //date formatter
         SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd");
-        SimpleDateFormat ora = new SimpleDateFormat ("hh:mm");
-        int meseD,annoD,giornoD;
+        SimpleDateFormat ora = new SimpleDateFormat("hh:mm");
+        int meseD, annoD, giornoD;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 BorderPane casella = new BorderPane();
@@ -314,69 +331,135 @@ public class MainGUI extends Application {
                 Rectangle r = new Rectangle(s, s, s, s);
 
                 //Questo if controlla se il mese inizi di domenica cosi non skippa la prima riga
-                if(dayofWeek == 7){
+                if (dayofWeek == 7) {
                     if (datesettter <= monthlen) {
                         num_day.setText("  " + (datesettter));
                         //un po inefficente
                         //ciclo sugli eventi e li inserisco in una hbox e in una vbox per mostrarli
-                        for (Event e: tmpCal) {
-                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0,4));
-                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5,7));
-                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8,10));
+                        for (Event e : tmpCal) {
+                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0, 4));
+                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5, 7));
+                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8, 10));
 
                             //bruttissimo if che controlla se la data è la seguente
                             //In futuro andra gestito con Date cosi basta solo un compare
-                            if(anno == annoD){
-                                if(meseD == mese){
-                                    if(giornoD == datesettter){
+                            if (anno == annoD) {
+                                if (meseD == mese) {
+                                    if (giornoD == datesettter) {
                                         HBox hBoxDay = new HBox();
                                         hBoxDay.setSpacing(10);
-                                        Label colore = new Label();
-                                        colore.setPrefSize(10,10);
-                                        colore.setStyle("-fx-background-color: "+e.getType().getColour()+";");
+                                        String titolo = e.getTitle();
+                                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
                                         Label impegno = new Label();
                                         Label orario = new Label();
-                                        orario.setText(" "+ora.format(e.getStart())+" - "+ora.format(e.getEnd()));
+                                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
 
-                                        impegno.setText(e.getTitle());
-                                        hBoxDay.getChildren().addAll(colore,impegno,orario);
+                                        if (titolo.length() > 6) {
+                                            impegno.setText(titolo.substring(0,6));
+                                        } else {
+                                            impegno.setText(e.getTitle());
+                                        }
+                                        hBoxDay.getChildren().addAll(impegno, orario);
                                         hBoxDay.setAlignment(Pos.CENTER);
                                         eventiVerticali.getChildren().add(hBoxDay);
+
+
+                                        hBoxDay.setOnMouseClicked(mouseEvent -> {
+                                            Stage mostrami = new Stage();
+                                            mostrami.setAlwaysOnTop(true);
+                                            mostrami.setTitle("Evento selezionato");
+
+                                            BorderPane mostraDati = new BorderPane();
+                                            VBox dati = new VBox();
+                                            Label nome = new Label();
+                                            Label data = new Label();
+                                            Label startE = new Label();
+                                            Label end = new Label();
+                                            Label coloreImpo = new Label();
+
+                                            nome.setText("Titolo evento: " + e.getTitle());
+                                            data.setText("Data evento: " + e.getDay().toString());
+                                            startE.setText("Orario inizio: " + ora.format(e.getStart()));
+                                            end.setText("Orario fine: " + ora.format(e.getEnd()));
+                                            coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                                            coloreImpo.setText("Importanza");
+                                            dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
+                                            mostraDati.setCenter(dati);
+
+                                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
+                                            mostrami.setScene(scenaEvento);
+
+                                            mostrami.show();
+                                        });
+
                                     }
                                 }
                             }
                         }
                         datesettter++;
                     }
-                }else {
+                } else {
                     if (count <= dayofWeek) {
                         num_day.setText("");
                     } else if (datesettter <= monthlen) {
                         num_day.setText("  " + (datesettter));
 
-                        for (Event e: tmpCal) {
-                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0,4));
-                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5,7));
-                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8,10));
+                        for (Event e : tmpCal) {
+                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0, 4));
+                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5, 7));
+                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8, 10));
 
                             //bruttissimo if che controlla se la data è la seguente
                             //In futuro andra gestito con Date cosi basta solo un compare
-                            if(anno == annoD){
-                                if(meseD == mese){
-                                    if(giornoD == datesettter){
+                            if (anno == annoD) {
+                                if (meseD == mese) {
+                                    if (giornoD == datesettter) {
                                         HBox hBoxDay = new HBox();
                                         hBoxDay.setSpacing(5);
-                                        Label colore = new Label();
-                                        colore.setPrefSize(10,10);
-                                        colore.setStyle("-fx-background-color: "+e.getType().getColour()+";");
+                                        String titolo = e.getTitle();
+                                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
                                         Label impegno = new Label();
                                         Label orario = new Label();
-                                        orario.setText(" "+ora.format(e.getStart())+" - "+ora.format(e.getEnd()));
+                                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
 
-                                        impegno.setText(e.getTitle());
-                                        hBoxDay.getChildren().addAll(colore,impegno,orario);
+                                        if (titolo.length() > 6) {
+                                            impegno.setText(titolo.substring(0,6));
+                                        } else {
+                                            impegno.setText(e.getTitle());
+                                        }
+                                        hBoxDay.getChildren().addAll(impegno, orario);
                                         hBoxDay.setAlignment(Pos.CENTER);
                                         eventiVerticali.getChildren().add(hBoxDay);
+
+
+                                        hBoxDay.setOnMouseClicked(mouseEvent -> {
+                                            Stage mostrami = new Stage();
+                                            mostrami.setAlwaysOnTop(true);
+                                            mostrami.setTitle("Evento selezionato");
+
+                                            BorderPane mostraDati = new BorderPane();
+                                            VBox dati = new VBox();
+                                            Label nome = new Label();
+                                            Label data = new Label();
+                                            Label startE = new Label();
+                                            Label end = new Label();
+                                            Label coloreImpo = new Label();
+
+                                            nome.setText("Titolo evento: " + e.getTitle());
+                                            data.setText("Data evento: " + e.getDay().toString());
+                                            startE.setText("Orario inizio: " + ora.format(e.getStart()));
+                                            end.setText("Orario fine: " + ora.format(e.getEnd()));
+                                            coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                                            coloreImpo.setText("Importanza");
+                                            dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
+                                            mostraDati.setCenter(dati);
+
+                                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
+                                            mostrami.setScene(scenaEvento);
+
+                                            mostrami.show();
+                                        });
+
                                     }
                                 }
                             }
@@ -398,10 +481,14 @@ public class MainGUI extends Application {
 
                 StackPane cella = new StackPane(casella, casella_text);
 
-                if(!num_day.getText().equals("")){
-                    final LocalDate date = start.plusDays(datesettter-2);
+                if (!num_day.getText().equals("")) {
+                    final LocalDate date = start.plusDays(datesettter - 2);
                     //da metter qua dentro la gestione migliore della data
-                    cella.setOnMouseClicked(mouseEvent -> {newEventModal(date); });
+                    cella.setOnMouseClicked(mouseEvent -> {
+                        if (mouseEvent.getClickCount() == 2) {
+                            newEventModal(date);
+                        }
+                    });
                 }
 
                 eventiVerticali.setAlignment(Pos.CENTER);
@@ -415,7 +502,7 @@ public class MainGUI extends Application {
         return calendar;
     }
 
-    public static void newEventModal(LocalDate date){
+    public static void newEventModal(LocalDate date) {
         Stage modalStage = new Stage();
         modalStage.setAlwaysOnTop(true);
 
