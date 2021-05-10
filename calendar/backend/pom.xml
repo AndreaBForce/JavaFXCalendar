@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.supsi.dti.info.labingsw1</groupId>
-    <artifactId>back_end</artifactId>
+    <artifactId>backend</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
