@@ -6,6 +6,8 @@ import ch.supsi.project.service_layer.Event;
 import ch.supsi.project.service_layer.EventType;
 import ch.supsi.project.service_layer.Type;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,10 +23,7 @@ import javafx.stage.Stage;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class MainGUI extends Application {
@@ -40,22 +39,24 @@ public class MainGUI extends Application {
 
         //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
         CalendarContainer calendario = new CalendarContainer("Prova.txt");
-        List<EventType> eventTypeList = new ArrayList<>();
+        //List<EventType> eventTypeList = new ArrayList<>();
 
-        eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
+        /*eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
         eventTypeList.add(new EventType(Type.LABORATORY, Colour.RED));
         eventTypeList.add(new EventType(Type.EXAM, Colour.GREEN));
         eventTypeList.add(new EventType(Type.HOLIDAY, Colour.ORANGE));
-        eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
+        eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));*/
+
+        calendario.close();
 
 
-        Date time = new Date();
+        /*Date time = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
         cal.add(Calendar.HOUR_OF_DAY, 3);
         long start = cal.getTime().getTime();
         cal.add(Calendar.HOUR_OF_DAY, 3);
-        long end = cal.getTime().getTime();
+        long end = cal.getTime().getTime();*/
 
         try {
             //setto titolo come slide
@@ -534,10 +535,35 @@ public class MainGUI extends Application {
         datePicker.setValue(date);
         TextField nomeEventoInput = new TextField();
         Label nomeEvento = new Label("Nome evento");
-        DatePicker timepicker = new DatePicker();
+        //DatePicker timepicker = new DatePicker();
         Label selezioneOrario = new Label("Selezione orario");
         Label selezioneTipoEvento = new Label("Selezione tipo evento");
 
+        /*
+        LIST VIEW
+         */
+
+        final ObservableList appTimepicker = FXCollections.observableArrayList();
+
+        Calendar ora = new GregorianCalendar();
+        ora.set(Calendar.HOUR_OF_DAY, 0);
+        ora.set(Calendar.MINUTE, 0);
+        ora.set(Calendar.SECOND, 0);
+        ora.set(Calendar.MILLISECOND, 0);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+        boolean end = false;
+
+        while(!end){
+            appTimepicker.add(format.format(ora.getTime()));
+            ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 15);
+            if(ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0){
+                end = true;
+            }
+        }
+
+        ListView timepicker = new ListView(appTimepicker);
+        
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
