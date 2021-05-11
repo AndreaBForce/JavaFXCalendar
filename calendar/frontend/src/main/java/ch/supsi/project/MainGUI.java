@@ -29,6 +29,8 @@ import java.util.List;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
+    CalendarContainer calendario = new CalendarContainer("Prova.txt");
+    List<EventType> eventTypeList = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -39,8 +41,8 @@ public class MainGUI extends Application {
         String APP_NAME = "CalendarioRRR";
 
         //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
-        CalendarContainer calendario = new CalendarContainer("Prova.txt");
-        List<EventType> eventTypeList = new ArrayList<>();
+
+
 
         eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
         eventTypeList.add(new EventType(Type.LABORATORY, Colour.RED));
@@ -502,7 +504,7 @@ public class MainGUI extends Application {
         return calendar;
     }
 
-    public static void newEventModal(LocalDate date) {
+    public void newEventModal(LocalDate date) {
         Stage modalStage = new Stage();
         modalStage.setAlwaysOnTop(true);
 
@@ -517,9 +519,9 @@ public class MainGUI extends Application {
             colConst.setPercentWidth(100.0 / 2);
             modal.getColumnConstraints().add(colConst);
         }
-        for (int k = 0; k < 3; k++) {
+        for (int k = 0; k < 4; k++) {
             RowConstraints rowConst = new RowConstraints();
-            rowConst.setPercentHeight(100.0 / 3);
+            rowConst.setPercentHeight(100.0 / 4);
             modal.getRowConstraints().add(rowConst);
         }
 
@@ -537,12 +539,15 @@ public class MainGUI extends Application {
         DatePicker timepicker = new DatePicker();
         Label selezioneOrario = new Label("Selezione orario");
         Label selezioneTipoEvento = new Label("Selezione tipo evento");
+        Button create = new Button("Create");
+        create.setOnMouseClicked(mouse -> calendario.addEvent(new Event(nomeEventoInput.getText(),datePicker.getValue().toEpochDay(), LocalDate.now().toEpochDay(),LocalDate.now().toEpochDay(), eventTypeList.get(1))));
 
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
         modal.add(selezioneOrario, 0, 2);
         modal.add(timepicker, 1, 2);
+        modal.add(create, 0,3);
 
         modalStage.show();
     }
