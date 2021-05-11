@@ -563,7 +563,7 @@ public class MainGUI extends Application {
         }
 
         ListView timepicker = new ListView(appTimepicker);
-        
+
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
