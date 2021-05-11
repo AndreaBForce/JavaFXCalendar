@@ -6,6 +6,8 @@ import ch.supsi.project.service_layer.Event;
 import ch.supsi.project.service_layer.EventType;
 import ch.supsi.project.service_layer.Type;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,12 +21,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.ZoneId;
+import java.util.*;
 
 
 public class MainGUI extends Application {
@@ -41,8 +42,8 @@ public class MainGUI extends Application {
         String APP_NAME = "CalendarioRRR";
 
         //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
-
-
+        //CalendarContainer calendario = new CalendarContainer("Prova.txt");
+        //List<EventType> eventTypeList = new ArrayList<>();
 
         eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
         eventTypeList.add(new EventType(Type.LABORATORY, Colour.RED));
@@ -51,13 +52,16 @@ public class MainGUI extends Application {
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
 
 
-        Date time = new Date();
+
+
+        /*Date time = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
         cal.add(Calendar.HOUR_OF_DAY, 3);
         long start = cal.getTime().getTime();
         cal.add(Calendar.HOUR_OF_DAY, 3);
         long end = cal.getTime().getTime();
+        calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));*/
 
         try {
             //setto titolo come slide
@@ -260,6 +264,7 @@ public class MainGUI extends Application {
 
             menuNew.setOnAction(mouse -> {
                 newEventModal(dataOra);
+                setupCalendario.setCenter(updateCalendario(calendario));
             });
 
             //Creo la parte della gestione della versione
@@ -301,6 +306,8 @@ public class MainGUI extends Application {
                 aboutStage.setScene(aboutScene);
                 aboutStage.show();
             });
+
+            calendario.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -519,9 +526,9 @@ public class MainGUI extends Application {
             colConst.setPercentWidth(100.0 / 2);
             modal.getColumnConstraints().add(colConst);
         }
-        for (int k = 0; k < 4; k++) {
+        for (int k = 0; k < 5; k++) {
             RowConstraints rowConst = new RowConstraints();
-            rowConst.setPercentHeight(100.0 / 4);
+            rowConst.setPercentHeight(100.0 / 5);
             modal.getRowConstraints().add(rowConst);
         }
 
@@ -536,23 +543,67 @@ public class MainGUI extends Application {
         datePicker.setValue(date);
         TextField nomeEventoInput = new TextField();
         Label nomeEvento = new Label("Nome evento");
-        DatePicker timepicker = new DatePicker();
+
+        final ObservableList appTimepicker = FXCollections.observableArrayList();
+
+        Calendar ora = new GregorianCalendar();
+        ora.set(Calendar.HOUR_OF_DAY, 0);
+        ora.set(Calendar.MINUTE, 0);
+        ora.set(Calendar.SECOND, 0);
+        ora.set(Calendar.MILLISECOND, 0);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+        boolean endCheck = false;
+
+        while(!endCheck){
+            appTimepicker.add(format.format(ora.getTime()));
+            ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 15);
+            if(ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0){
+                endCheck = true;
+            }
+        }
+
+        ListView timepicker = new ListView(appTimepicker);
+
         Label selezioneOrario = new Label("Selezione orario");
         Label selezioneTipoEvento = new Label("Selezione tipo evento");
-        Button create = new Button("Create");
-        create.setOnMouseClicked(mouse -> calendario.addEvent(new Event(nomeEventoInput.getText(),datePicker.getValue().toEpochDay(), LocalDate.now().toEpochDay(),LocalDate.now().toEpochDay(), eventTypeList.get(1))));
 
+        final ObservableList appTypePicker = FXCollections.observableArrayList();
+
+        eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
+
+        ListView typepicker = new ListView(appTypePicker);
+
+        Button create = new Button("Create");
+        create.setOnMouseClicked(mouse -> {
+            Date time = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(time);
+            cal.add(Calendar.HOUR_OF_DAY, 3);
+            long start = cal.getTime().getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 3);
+            long end = cal.getTime().getTime();
+            //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
+
+            calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
+                    .atZone(ZoneId.systemDefault()).toInstant()).getTime(), start,end, eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+            modalStage.close();
+            updateCalendario(calendario);
+        });
+        
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
         modal.add(selezioneOrario, 0, 2);
         modal.add(timepicker, 1, 2);
-        modal.add(create, 0,3);
+        modal.add(typepicker, 1, 3);
+        modal.add(create, 0,4);
 
         modalStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }
