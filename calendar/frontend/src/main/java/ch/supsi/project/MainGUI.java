@@ -36,14 +36,12 @@ public class MainGUI extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         //VERSIONE DI BUILD (DA AGGIORNARE OGNI VOLTA)
-        //Sno i dati che compaiono nel about
+        //Sono i dati che compaiono nel about
+        //TODO DA RIMPIAZZARE CON LA VARIABILE BUILD
         String NUM_VERSION = "1.4.0";
         String BUILD_DATE = "07-05-2021";
         String APP_NAME = "CalendarioRRR";
 
-        //PARTE FX GUI NUOVA VANNO IMPLEMENTATI I LISTENER
-        //CalendarContainer calendario = new CalendarContainer("Prova.txt");
-        //List<EventType> eventTypeList = new ArrayList<>();
 
         eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
         eventTypeList.add(new EventType(Type.LABORATORY, Colour.RED));
@@ -51,27 +49,15 @@ public class MainGUI extends Application {
         eventTypeList.add(new EventType(Type.HOLIDAY, Colour.ORANGE));
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
 
-
-
-
-        /*Date time = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
-        cal.add(Calendar.HOUR_OF_DAY, 3);
-        long start = cal.getTime().getTime();
-        cal.add(Calendar.HOUR_OF_DAY, 3);
-        long end = cal.getTime().getTime();
-        calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));*/
-
         try {
             //setto titolo come slide
-
             stage.setTitle("Finestra principale calendario (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
-            //Inizializzo border pane
+
+            //Inizializzo border pane principale
             BorderPane root = new BorderPane();
             root.setPrefSize(900, 700);
 
-            //creo hbox top con il menu top
+            //creo hbox top con il menu blue nel top border pane
             HBox top = new HBox();
             top.setPadding(new Insets(5, 5, 5, 5));
             top.setSpacing(10);
@@ -168,6 +154,8 @@ public class MainGUI extends Application {
             //PARTE GESTIONE EVENTI
 
             //GESTIONE DELLA ROBA DEL FORM
+            //TODO DA RIMUOVERE STI SOCI CHE ALCUNI NON VENGONO USATI
+
             EventHandler<MouseEvent> clickHandleCasella = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -247,6 +235,7 @@ public class MainGUI extends Application {
             exitButtons.setAlignment(Pos.CENTER);
             exitBorder.setCenter(exitButtons);
 
+            //scena del meno di exit con annulla e socio
             Scene scenaE = new Scene(exitBorder, 300, 100);
             menuExit.setOnAction(mouse -> {
                 exitStage.setScene(scenaE);
@@ -314,7 +303,7 @@ public class MainGUI extends Application {
         }
     }
 
-
+//socio che refresha il calendario
     public GridPane updateCalendario(CalendarContainer calendario) {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
@@ -325,163 +314,110 @@ public class MainGUI extends Application {
         int monthlen = start.lengthOfMonth();
         int mese = start.getMonth().getValue();
         int anno = start.getYear();
-        int count = 1, datesettter = 1;
+        int count = 1, datesettter = 1,mesePrima = start.minusMonths(1).lengthOfMonth(),meseDopo = 1;;
+
         //date formatter
         SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd");
         SimpleDateFormat ora = new SimpleDateFormat("hh:mm");
         int meseD, annoD, giornoD;
+
+
+        //Ciclo for che crea la scacchiera del mese
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 BorderPane casella = new BorderPane();
                 BorderPane casella_text = new BorderPane();
                 Label num_day = new Label();
+                num_day.setStyle("-fx-font-weight: bold");
+
                 VBox eventiVerticali = new VBox();
 
                 Rectangle r = new Rectangle(s, s, s, s);
 
-                //Questo if controlla se il mese inizi di domenica cosi non skippa la prima riga
-                if (dayofWeek == 7) {
-                    if (datesettter <= monthlen) {
-                        num_day.setText("  " + (datesettter));
-                        //un po inefficente
-                        //ciclo sugli eventi e li inserisco in una hbox e in una vbox per mostrarli
-                        for (Event e : tmpCal) {
-                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0, 4));
-                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5, 7));
-                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8, 10));
-
-                            //bruttissimo if che controlla se la data è la seguente
-                            //In futuro andra gestito con Date cosi basta solo un compare
-                            if (anno == annoD) {
-                                if (meseD == mese) {
-                                    if (giornoD == datesettter) {
-                                        HBox hBoxDay = new HBox();
-                                        hBoxDay.setSpacing(10);
-                                        String titolo = e.getTitle();
-                                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                                        Label impegno = new Label();
-                                        Label orario = new Label();
-                                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
-
-                                        if (titolo.length() > 6) {
-                                            impegno.setText(titolo.substring(0,6));
-                                        } else {
-                                            impegno.setText(e.getTitle());
-                                        }
-                                        hBoxDay.getChildren().addAll(impegno, orario);
-                                        hBoxDay.setAlignment(Pos.CENTER);
-                                        eventiVerticali.getChildren().add(hBoxDay);
-
-
-                                        hBoxDay.setOnMouseClicked(mouseEvent -> {
-                                            Stage mostrami = new Stage();
-                                            mostrami.setAlwaysOnTop(true);
-                                            mostrami.setTitle("Evento selezionato");
-
-                                            BorderPane mostraDati = new BorderPane();
-                                            VBox dati = new VBox();
-                                            Label nome = new Label();
-                                            Label data = new Label();
-                                            Label startE = new Label();
-                                            Label end = new Label();
-                                            Label coloreImpo = new Label();
-
-                                            nome.setText("Titolo evento: " + e.getTitle());
-                                            data.setText("Data evento: " + e.getDay().toString());
-                                            startE.setText("Orario inizio: " + ora.format(e.getStart()));
-                                            end.setText("Orario fine: " + ora.format(e.getEnd()));
-                                            coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                                            coloreImpo.setText("Importanza");
-                                            dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
-                                            mostraDati.setCenter(dati);
-
-                                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
-                                            mostrami.setScene(scenaEvento);
-
-                                            mostrami.show();
-                                        });
-
-                                    }
-                                }
-                            }
-                        }
-                        datesettter++;
-                    }
-                } else {
-                    if (count <= dayofWeek) {
-                        num_day.setText("");
-                    } else if (datesettter <= monthlen) {
-                        num_day.setText("  " + (datesettter));
-
-                        for (Event e : tmpCal) {
-                            annoD = Integer.valueOf(ft.format(e.getDay()).substring(0, 4));
-                            meseD = Integer.valueOf(ft.format(e.getDay()).substring(5, 7));
-                            giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8, 10));
-
-                            //bruttissimo if che controlla se la data è la seguente
-                            //In futuro andra gestito con Date cosi basta solo un compare
-                            if (anno == annoD) {
-                                if (meseD == mese) {
-                                    if (giornoD == datesettter) {
-                                        HBox hBoxDay = new HBox();
-                                        hBoxDay.setSpacing(5);
-                                        String titolo = e.getTitle();
-                                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                                        Label impegno = new Label();
-                                        Label orario = new Label();
-                                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
-
-                                        if (titolo.length() > 6) {
-                                            impegno.setText(titolo.substring(0,6));
-                                        } else {
-                                            impegno.setText(e.getTitle());
-                                        }
-                                        hBoxDay.getChildren().addAll(impegno, orario);
-                                        hBoxDay.setAlignment(Pos.CENTER);
-                                        eventiVerticali.getChildren().add(hBoxDay);
-
-
-                                        hBoxDay.setOnMouseClicked(mouseEvent -> {
-                                            Stage mostrami = new Stage();
-                                            mostrami.setAlwaysOnTop(true);
-                                            mostrami.setTitle("Evento selezionato");
-
-                                            BorderPane mostraDati = new BorderPane();
-                                            VBox dati = new VBox();
-                                            Label nome = new Label();
-                                            Label data = new Label();
-                                            Label startE = new Label();
-                                            Label end = new Label();
-                                            Label coloreImpo = new Label();
-
-                                            nome.setText("Titolo evento: " + e.getTitle());
-                                            data.setText("Data evento: " + e.getDay().toString());
-                                            startE.setText("Orario inizio: " + ora.format(e.getStart()));
-                                            end.setText("Orario fine: " + ora.format(e.getEnd()));
-                                            coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                                            coloreImpo.setText("Importanza");
-                                            dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
-                                            mostraDati.setCenter(dati);
-
-                                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
-                                            mostrami.setScene(scenaEvento);
-
-                                            mostrami.show();
-                                        });
-
-                                    }
-                                }
-                            }
-                        }
-
-                        datesettter++;
-                    } else {
-                        num_day.setText("");
-                    }
-                }
-                count++;
+                //setto background socio bianco e bordi
                 r.setFill(Color.WHITE);
                 r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+
+                if (count <= dayofWeek) {
+                    //Qua gestisco la parte dei giorni prima del mese
+                    num_day.setText("  "+(mesePrima-dayofWeek+count));
+
+                    r.setFill(Color.GRAY);
+                    r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+
+                } else if (datesettter <= monthlen) {
+                    num_day.setText("  " + (datesettter));
+
+                    for (Event e : tmpCal) {
+                        annoD = Integer.valueOf(ft.format(e.getDay()).substring(0, 4));
+                        meseD = Integer.valueOf(ft.format(e.getDay()).substring(5, 7));
+                        giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8, 10));
+
+                        //bruttissimo if che controlla se la data è la seguente
+                        //In futuro andra gestito con Date cosi basta solo un compare
+                        if (anno == annoD) {
+                            if (meseD == mese) {
+                                if (giornoD == datesettter) {
+                                    HBox hBoxDay = new HBox();
+                                    hBoxDay.setSpacing(5);
+                                    String titolo = e.getTitle();
+                                    hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                                    Label impegno = new Label();
+                                    Label orario = new Label();
+                                    orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
+
+                                    if (titolo.length() > 6) {
+                                        impegno.setText(titolo.substring(0, 6));
+                                    } else {
+                                        impegno.setText(e.getTitle());
+                                    }
+                                    hBoxDay.getChildren().addAll(impegno, orario);
+                                    hBoxDay.setAlignment(Pos.CENTER);
+                                    eventiVerticali.getChildren().add(hBoxDay);
+
+
+                                    hBoxDay.setOnMouseClicked(mouseEvent -> {
+                                        Stage mostrami = new Stage();
+                                        mostrami.setAlwaysOnTop(true);
+                                        mostrami.setTitle("Evento selezionato");
+
+                                        BorderPane mostraDati = new BorderPane();
+                                        VBox dati = new VBox();
+                                        Label nome = new Label();
+                                        Label data = new Label();
+                                        Label startE = new Label();
+                                        Label end = new Label();
+                                        Label coloreImpo = new Label();
+
+                                        nome.setText("Titolo evento: " + e.getTitle());
+                                        data.setText("Data evento: " + e.getDay().toString());
+                                        startE.setText("Orario inizio: " + ora.format(e.getStart()));
+                                        end.setText("Orario fine: " + ora.format(e.getEnd()));
+                                        coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                                        coloreImpo.setText("Importanza");
+                                        dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
+                                        mostraDati.setCenter(dati);
+
+                                        Scene scenaEvento = new Scene(mostraDati, 400, 100);
+                                        mostrami.setScene(scenaEvento);
+
+                                        mostrami.show();
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                    datesettter++;
+                } else {
+                    num_day.setText("  "+(meseDopo));
+
+                    meseDopo++;
+                    r.setFill(Color.GRAY);
+                    r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+                }
+
+                count++;
 
                 casella.setCenter(r);
                 num_day.setAlignment(Pos.TOP_LEFT);
@@ -490,6 +426,7 @@ public class MainGUI extends Application {
 
                 StackPane cella = new StackPane(casella, casella_text);
 
+                //TODO SISTEMARE CON L'AGGIUNTA DELLA DATA NELLE CASELLE GRIGE QUINDI PRECEDENTE E SUCCESSIVO
                 if (!num_day.getText().equals("")) {
                     final LocalDate date = start.plusDays(datesettter - 2);
                     //da metter qua dentro la gestione migliore della data
@@ -555,10 +492,10 @@ public class MainGUI extends Application {
 
         boolean endCheck = false;
 
-        while(!endCheck){
+        while (!endCheck) {
             appTimepicker.add(format.format(ora.getTime()));
             ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 15);
-            if(ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0){
+            if (ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0) {
                 endCheck = true;
             }
         }
@@ -586,7 +523,7 @@ public class MainGUI extends Application {
             //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
             calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                    .atZone(ZoneId.systemDefault()).toInstant()).getTime(), start,end, eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+                    .atZone(ZoneId.systemDefault()).toInstant()).getTime(), start, end, eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
             modalStage.close();
             updateCalendario(calendario);
         });
@@ -597,7 +534,7 @@ public class MainGUI extends Application {
         modal.add(selezioneOrario, 0, 2);
         modal.add(timepicker, 1, 2);
         modal.add(typepicker, 1, 3);
-        modal.add(create, 0,4);
+        modal.add(create, 0, 4);
 
         modalStage.show();
     }
