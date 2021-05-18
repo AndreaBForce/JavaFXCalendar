@@ -590,7 +590,7 @@ public class MainGUI extends Application {
             modalStage.close();
             updateCalendario(calendario);
         });
-        
+
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
