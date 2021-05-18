@@ -114,42 +114,6 @@ public class MainGUI extends Application {
 
             //Creo calendario
             BorderPane setupCalendario = new BorderPane();
-            //setup giorni settimana
-            HBox giorni = new HBox();
-
-            Label lun = new Label();
-            lun.setText("Monday");
-            lun.setFont(new Font("Arial", 15));
-
-            Label dom = new Label();
-            dom.setText("Sunday");
-            dom.setFont(new Font("Arial", 15));
-
-            Label mart = new Label();
-            mart.setText("Tuesday");
-            mart.setFont(new Font("Arial", 15));
-
-            Label merc = new Label();
-            merc.setText("Wednesday");
-            merc.setFont(new Font("Arial", 15));
-
-            Label giov = new Label();
-            giov.setText("Thursday");
-            giov.setFont(new Font("Arial", 15));
-
-            Label vene = new Label();
-            vene.setText("Friday");
-            vene.setFont(new Font("Arial", 15));
-
-            Label sab = new Label();
-            sab.setText("Saturday");
-            sab.setFont(new Font("Arial", 15));
-
-            giorni.setAlignment(Pos.CENTER);
-            giorni.setSpacing(80);
-            giorni.getChildren().addAll(dom, lun, mart, merc, giov, vene, sab);
-
-            setupCalendario.setTop(giorni);
 
             //PARTE GESTIONE EVENTI
 
@@ -308,6 +272,52 @@ public class MainGUI extends Application {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
 
+        //Gestione apici calendario
+
+        Label lun = new Label();
+        lun.setText("Monday");
+        lun.setStyle("-fx-font-weight: bold");
+        lun.setFont(new Font("Arial", 15));
+
+        Label dom = new Label();
+        dom.setText("Sunday");
+        dom.setStyle("-fx-font-weight: bold");
+        dom.setFont(new Font("Arial", 15));
+
+        Label mart = new Label();
+        mart.setText("Tuesday");
+        mart.setStyle("-fx-font-weight: bold");
+        mart.setFont(new Font("Arial", 15));
+
+        Label merc = new Label();
+        merc.setText("Wednesday");
+        merc.setStyle("-fx-font-weight: bold");
+        merc.setFont(new Font("Arial", 15));
+
+        Label giov = new Label();
+        giov.setText("Thursday");
+        giov.setStyle("-fx-font-weight: bold");
+        giov.setFont(new Font("Arial", 15));
+
+        Label vene = new Label();
+        vene.setText("Friday");
+        vene.setStyle("-fx-font-weight: bold");
+        vene.setFont(new Font("Arial", 15));
+
+        Label sab = new Label();
+        sab.setText("Saturday");
+        sab.setStyle("-fx-font-weight: bold");
+        sab.setFont(new Font("Arial", 15));
+
+        calendar.add(dom, 1, 0);
+        calendar.add(lun, 2, 0);
+        calendar.add(mart, 3, 0);
+        calendar.add(merc, 4, 0);
+        calendar.add(giov, 5, 0);
+        calendar.add(vene, 6,0);
+        calendar.add(sab, 7,0);
+
+
         double s = 130; // side of rectangle
         LocalDate start = dataOra.withDayOfMonth(1);
         int dayofWeek = start.getDayOfWeek().getValue();
@@ -321,8 +331,8 @@ public class MainGUI extends Application {
         SimpleDateFormat ora = new SimpleDateFormat("HH:mm");
 
         //Ciclo for che crea la scacchiera del mese
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 1; i < 7; i++) {
+            for (int j = 1; j < 8; j++) {
                 BorderPane casella = new BorderPane();
                 BorderPane casella_text = new BorderPane();
                 Label num_day = new Label();
@@ -432,15 +442,17 @@ public class MainGUI extends Application {
                             Label data = new Label();
                             Label startE = new Label();
                             Label end = new Label();
-                            Label coloreImpo = new Label();
-
+                            Label importanzaE = new Label();
+                            Label coloreE = new Label();
                             nome.setText("Titolo evento: " + e.getTitle());
                             data.setText("Data evento: " + e.getDay().toString());
                             startE.setText("Orario inizio: " + ora.format(e.getStart()));
                             end.setText("Orario fine: " + ora.format(e.getEnd()));
-                            coloreImpo.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                            coloreImpo.setText("Importanza");
-                            dati.getChildren().addAll(nome, data, startE, end, coloreImpo);
+
+                            importanzaE.setText("Tipo evento: "+e.getType().toString());
+                            coloreE.setText("                                                                                                       ");
+                            coloreE.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                            dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
                             mostraDati.setCenter(dati);
 
                             Scene scenaEvento = new Scene(mostraDati, 400, 100);
