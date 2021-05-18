@@ -453,14 +453,15 @@ public class MainGUI extends Application {
         modalStage.setAlwaysOnTop(true);
 
         GridPane modal = new GridPane();
+        modal.setPrefSize(400, 800);
         modal.setHgap(10);
         modal.setVgap(10);
         modal.setPadding(new Insets(10, 10, 10, 10));
-        modal.setGridLinesVisible(true);
+        //modal.setGridLinesVisible(true);
 
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < 3; k++) {
             ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / 2);
+            colConst.setPercentWidth(100.0 / 3);
             modal.getColumnConstraints().add(colConst);
         }
         for (int k = 0; k < 5; k++) {
@@ -469,9 +470,16 @@ public class MainGUI extends Application {
             modal.getRowConstraints().add(rowConst);
         }
 
+
+
         modalStage.setScene(new Scene(modal, 300, 400));
         modalStage.setTitle(date.toString());
         modalStage.initModality(Modality.WINDOW_MODAL);
+
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Missing one or more fields.");
+        // Necessari per mostrare alert davanti al modal
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(modalStage);
 
         //Controllare a cosa serve
         //modalStage.initOwner(((Node)event.getSource()).getScene().getWindow() );
@@ -481,9 +489,11 @@ public class MainGUI extends Application {
         TextField nomeEventoInput = new TextField();
         Label nomeEvento = new Label("Nome evento");
 
-        final ObservableList appTimepicker = FXCollections.observableArrayList();
+        final ObservableList<String> appTimepicker = FXCollections.observableArrayList();
+        ArrayList<Calendar> orari = new ArrayList<>();
 
         Calendar ora = new GregorianCalendar();
+        ora.setTime(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         ora.set(Calendar.HOUR_OF_DAY, 0);
         ora.set(Calendar.MINUTE, 0);
         ora.set(Calendar.SECOND, 0);
@@ -493,48 +503,62 @@ public class MainGUI extends Application {
         boolean endCheck = false;
 
         while (!endCheck) {
-            appTimepicker.add(format.format(ora.getTime()));
+            Calendar c = new GregorianCalendar();
+            c.setTime(ora.getTime());
+            orari.add(c);
             ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 15);
             if (ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0) {
                 endCheck = true;
             }
         }
-
-        ListView timepicker = new ListView(appTimepicker);
+        orari.stream().forEach(c -> appTimepicker.add(format.format(c.getTime())));
 
         Label selezioneOrario = new Label("Selezione orario");
-        Label selezioneTipoEvento = new Label("Selezione tipo evento");
+        ListView timepickerStart = new ListView(appTimepicker);
+        ListView timepickerEnd = new ListView(appTimepicker);
 
         final ObservableList appTypePicker = FXCollections.observableArrayList();
 
         eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
 
+        Label selezioneTipoEvento = new Label("Selezione tipo evento");
         ListView typepicker = new ListView(appTypePicker);
 
         Button create = new Button("Create");
-        create.setOnMouseClicked(mouse -> {
-            Date time = new Date();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(time);
-            cal.add(Calendar.HOUR_OF_DAY, 3);
-            long start = cal.getTime().getTime();
-            cal.add(Calendar.HOUR_OF_DAY, 3);
-            long end = cal.getTime().getTime();
-            //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
-            calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                    .atZone(ZoneId.systemDefault()).toInstant()).getTime(), start, end, eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
-            modalStage.close();
-            updateCalendario(calendario);
+        create.setOnMouseClicked(mouse -> {
+            if(nomeEventoInput.getText().isEmpty()
+                    || datePicker.getValue() == null
+                    || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
+                    || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()){
+
+                alert.show();
+            }else{
+                Date time = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(time);
+                cal.add(Calendar.HOUR_OF_DAY, 3);
+                long start = cal.getTime().getTime();
+                cal.add(Calendar.HOUR_OF_DAY, 3);
+                long end = cal.getTime().getTime();
+                //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
+
+                calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
+                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+                calendario.close();
+                updateCalendario(calendario);
+                modalStage.close();
+            }
         });
 
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
         modal.add(datePicker, 1, 1);
         modal.add(selezioneOrario, 0, 2);
-        modal.add(timepicker, 1, 2);
+        modal.add(timepickerStart, 1, 2);
+        modal.add(timepickerEnd, 2, 2);
         modal.add(typepicker, 1, 3);
-        modal.add(create, 0, 4);
+        modal.add(create, 1, 4);
 
         modalStage.show();
     }
