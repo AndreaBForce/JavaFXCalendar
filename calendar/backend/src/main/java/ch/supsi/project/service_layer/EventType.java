@@ -21,6 +21,6 @@ public class EventType {
 
     @Override
     public String toString() {
-        return "" + description + ", " + colour;
+        return "" + description;
     }
 }
