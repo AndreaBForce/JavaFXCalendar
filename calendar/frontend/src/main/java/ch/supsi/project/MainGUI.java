@@ -318,7 +318,7 @@ public class MainGUI extends Application {
 
         //date formatter
         SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd");
-        SimpleDateFormat ora = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat ora = new SimpleDateFormat("HH:mm");
 
         //Ciclo for che crea la scacchiera del mese
         for (int i = 0; i < 6; i++) {
@@ -380,7 +380,7 @@ public class MainGUI extends Application {
                     });
                 }
 
-                eventiVerticali.setAlignment(Pos.CENTER);
+                eventiVerticali.setAlignment(Pos.TOP_CENTER);
                 casella_text.setCenter(eventiVerticali);
 
                 calendar.add(cella, j, i);

@@ -23,6 +23,7 @@ public class CalendarContainer {
 
     public void addEvent(Event event){
         calendar.add(event);
+        calendar.sort(new DateComparator());
     }
 
     public List<Event> getCalendar(){
