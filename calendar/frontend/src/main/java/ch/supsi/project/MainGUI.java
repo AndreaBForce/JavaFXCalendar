@@ -1,10 +1,7 @@
 package ch.supsi.project;
 
-import ch.supsi.project.application_layer.Colour;
 import ch.supsi.project.service_layer.CalendarContainer;
 import ch.supsi.project.service_layer.Event;
-import ch.supsi.project.service_layer.EventType;
-import ch.supsi.project.service_layer.Type;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,17 +18,15 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
     CalendarContainer calendario = new CalendarContainer("Prova.txt");
-    List<EventType> eventTypeList = new ArrayList<>();
+    BorderPane setupCalendario = new BorderPane();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -42,27 +37,27 @@ public class MainGUI extends Application {
         String BUILD_DATE = "07-05-2021";
         String APP_NAME = "CalendarioRRR";
 
-
-        eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
-        eventTypeList.add(new EventType(Type.LABORATORY, Colour.RED));
-        eventTypeList.add(new EventType(Type.EXAM, Colour.GREEN));
-        eventTypeList.add(new EventType(Type.HOLIDAY, Colour.ORANGE));
-        eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
-
         try {
-            //setto titolo come slide
+            /**
+             * STAGE PRINCIPALE
+             */
             stage.setTitle("Finestra principale calendario (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
 
+            /**
+             * ROOT
+             */
             //Inizializzo border pane principale
             BorderPane root = new BorderPane();
             root.setPrefSize(900, 700);
 
+            /**
+             * TOP
+             */
             //creo hbox top con il menu blue nel top border pane
             HBox top = new HBox();
             top.setPadding(new Insets(5, 5, 5, 5));
             top.setSpacing(10);
             top.setStyle("-fx-background-color: #336699;");
-
 
             //Menu tendina file -> exit
             Menu menuFile = new Menu("File");
@@ -81,7 +76,6 @@ public class MainGUI extends Application {
             MenuBar menuBar2 = new MenuBar();
             menuBar2.getMenus().add(menuEdit);
 
-
             //Menu tendina help -> about
             Menu menuHelp = new Menu("Help");
             MenuItem menuAbout = new MenuItem("About");
@@ -91,8 +85,13 @@ public class MainGUI extends Application {
 
             //aggiungo il menubar alla parte top del socio
             top.getChildren().addAll(menuBar1, menuBar2, menuBar3);
-            root.setTop(top);
+            /**
+             * FINE TOP
+             */
 
+            /**
+             * CENTER
+             */
             //Creo bottoni
             HBox centerMen = new HBox();
             centerMen.setPadding(new Insets(5, 5, 5, 5));
@@ -110,68 +109,45 @@ public class MainGUI extends Application {
 
             centerMen.getChildren().addAll(monthPrev, monthCurrent, monthNext);
             centerMen.setAlignment(Pos.TOP_CENTER);
+            /**
+             * FINE CENTER
+             */
 
-
-            //Creo calendario
-            BorderPane setupCalendario = new BorderPane();
-
-            //PARTE GESTIONE EVENTI
-
-            //GESTIONE DELLA ROBA DEL FORM
-            //TODO DA RIMUOVERE STI SOCI CHE ALCUNI NON VENGONO USATI
-
-            EventHandler<MouseEvent> clickHandleCasella = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    System.out.println("PREMUTO ILTASTO");
-                }
-            };
-
-            EventHandler<MouseEvent> clickNextMonth = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    dataOra = dataOra.plusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
-                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-                }
-            };
-
-            EventHandler<MouseEvent> clickPrevMonth = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    dataOra = dataOra.minusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
-                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-                }
-            };
-
-            monthNext.setOnMouseClicked(clickNextMonth);
-            monthPrev.setOnMouseClicked(clickPrevMonth);
-
-            //action event dei menu
-            menuPrev.setOnAction(mouseEvent -> {
-                dataOra = dataOra.minusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
-                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-            });
-
-            //Sono gli action event dei menu
-            menuNext.setOnAction(mouseEvent -> {
-                dataOra = dataOra.plusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
-                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-            });
+            /**
+             * BOTTOM
+             */
 
             //Qua avviene la creazione del calendario
             setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
 
+            /**
+             * FINE BOTTOM
+             */
+
+            root.setTop(top);
             root.setCenter(centerMen);
             root.setBottom(setupCalendario);
+            /**
+             * FINE ROOT
+             */
 
+            /**
+             * FINE STAGE PRINCIPALE
+             */
+
+            /**
+             * SCENE
+             */
             Scene scene = new Scene(root, 1100, 1000);
             stage.setScene(scene);
             stage.show();
+            /**
+             * FINE SCENE
+             */
 
+            /**
+             * STAGE EXIT
+             */
             //Creo parte per gestione del modale dell'exit
             //quindi un bottone con sei sicuro di voler uscire
             Stage exitStage = new Stage();
@@ -201,25 +177,13 @@ public class MainGUI extends Application {
 
             //scena del meno di exit con annulla e socio
             Scene scenaE = new Scene(exitBorder, 300, 100);
-            menuExit.setOnAction(mouse -> {
-                exitStage.setScene(scenaE);
-                exitStage.show();
-            });
+            /**
+             * FINE STAGE EXIT
+             */
 
-            exitAnnulla.setOnMouseClicked(x -> {
-                exitStage.close();
-            });
-
-            exitEsci.setOnAction(x -> {
-                exitStage.close();
-                stage.close();
-            });
-
-            menuNew.setOnAction(mouse -> {
-                newEventModal(dataOra,setupCalendario);
-                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-            });
-
+            /**
+             * STAGE VERSIONE
+             */
             //Creo la parte della gestione della versione
             Stage aboutStage = new Stage();
             aboutStage.setTitle("About");
@@ -254,13 +218,79 @@ public class MainGUI extends Application {
             borderAbout.setTop(appInfo);
             borderAbout.setCenter(vbAbout);
             Scene aboutScene = new Scene(borderAbout, 400, 150);
+            /**
+             * FINE STAGE VERSIONE
+             */
+
+            /**
+             * LISTENER
+             */
+            /**
+             * TOP
+             */
+            menuExit.setOnAction(mouse -> {
+                exitStage.setScene(scenaE);
+                exitStage.show();
+            });
+
+            exitAnnulla.setOnMouseClicked(x -> {
+                exitStage.close();
+            });
+
+            exitEsci.setOnAction(x -> {
+                exitStage.close();
+                stage.close();
+            });
+
+            //action event dei menu
+            menuPrev.setOnAction(mouseEvent -> {
+                dataOra = dataOra.minusMonths(1);
+                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
+            });
+
+            //Sono gli action event dei menu
+            menuNext.setOnAction(mouseEvent -> {
+                dataOra = dataOra.plusMonths(1);
+                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
+            });
+
+            menuNew.setOnAction(mouse -> {
+                newEventModal(dataOra,setupCalendario);
+                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
+            });
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
                 aboutStage.show();
             });
+            /**
+             * CENTER
+             */
+            EventHandler<MouseEvent> clickNextMonth = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    dataOra = dataOra.plusMonths(1);
+                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
+                }
+            };
 
-            calendario.close();
+            EventHandler<MouseEvent> clickPrevMonth = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    dataOra = dataOra.minusMonths(1);
+                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
+                }
+            };
+
+            monthNext.setOnMouseClicked(clickNextMonth);
+            monthPrev.setOnMouseClicked(clickPrevMonth);
+            /**
+             * FINE LISTENER
+             */
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -416,7 +446,7 @@ public class MainGUI extends Application {
                         HBox hBoxDay = new HBox();
                         hBoxDay.setSpacing(5);
                         String titolo = e.getTitle();
-                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
                         Label impegno = new Label();
                         Label orario = new Label();
                         orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
@@ -540,7 +570,7 @@ public class MainGUI extends Application {
 
         final ObservableList appTypePicker = FXCollections.observableArrayList();
 
-        eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
+        CalendarContainer.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
 
         Label selezioneTipoEvento = new Label("Selezione tipo evento");
         ListView typepicker = new ListView(appTypePicker);
@@ -565,8 +595,7 @@ public class MainGUI extends Application {
                 //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
                 calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
-                calendario.close();
+                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarContainer.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 modalStage.close();
             }

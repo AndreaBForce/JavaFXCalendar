@@ -5,10 +5,7 @@ import ch.supsi.project.service_layer.Type;
 import ch.supsi.project.service_layer.Event;
 import ch.supsi.project.service_layer.EventType;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -50,6 +47,28 @@ public final class FileReadWrite {
         return eventList;
     }
 
+    public void append(Event event){
+        File tmpFile = new File(output);
+        try {
+            if(tmpFile.createNewFile()){
+                System.out.println("File creato");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try(FileWriter file = new FileWriter(output,true)) {
+
+            String str = String.format("%s,%d,%d,%d,%d,%d\n", event.getTitle(), event.getDay().getTime(), event.getStart().getTime(), event.getEnd().getTime(), event.getType().getDescription().ordinal(), event.getType().getColour().ordinal());
+            file.write(str);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void write(List<Event> eventList){
         File tmpFile = new File(output);
         try {
@@ -61,15 +80,13 @@ public final class FileReadWrite {
             e.printStackTrace();
         }
 
-        try {
-            FileWriter file = new FileWriter(output);
+        try(FileWriter file = new FileWriter(output)) {
 
             for(Event e : eventList){
                 String str = String.format("%s,%d,%d,%d,%d,%d\n", e.getTitle(), e.getDay().getTime(), e.getStart().getTime(), e.getEnd().getTime(), e.getType().getDescription().ordinal(), e.getType().getColour().ordinal());
                 file.write(str);
             }
 
-            file.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
