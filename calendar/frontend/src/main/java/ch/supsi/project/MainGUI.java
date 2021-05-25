@@ -230,7 +230,7 @@ public class MainGUI extends Application {
              */
             menuExit.setOnAction(mouse -> {
                 exitStage.setScene(scenaE);
-                exitStage.show();
+                exitStage.showAndWait();
             });
 
             exitAnnulla.setOnMouseClicked(x -> {
@@ -263,7 +263,7 @@ public class MainGUI extends Application {
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
-                aboutStage.show();
+                aboutStage.showAndWait();
             });
             /**
              * CENTER
@@ -488,7 +488,7 @@ public class MainGUI extends Application {
                             Scene scenaEvento = new Scene(mostraDati, 400, 100);
                             mostrami.setScene(scenaEvento);
 
-                            mostrami.show();
+                            mostrami.showAndWait();
                         });
 
                     }
@@ -497,7 +497,6 @@ public class MainGUI extends Application {
         }
 
     }
-
 
     public void newEventModal(LocalDate date,BorderPane setupCalendario) {
         Stage modalStage = new Stage();
@@ -520,8 +519,6 @@ public class MainGUI extends Application {
             rowConst.setPercentHeight(100.0 / 5);
             modal.getRowConstraints().add(rowConst);
         }
-
-
 
         modalStage.setScene(new Scene(modal, 300, 400));
         modalStage.setTitle(date.toString());
@@ -557,7 +554,7 @@ public class MainGUI extends Application {
             Calendar c = new GregorianCalendar();
             c.setTime(ora.getTime());
             orari.add(c);
-            ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 15);
+            ora.set(Calendar.MINUTE, ora.get(Calendar.MINUTE) + 30);
             if (ora.get(Calendar.HOUR_OF_DAY) == 0 && ora.get(Calendar.MINUTE) == 0) {
                 endCheck = true;
             }
