@@ -230,6 +230,7 @@ public class MainGUI extends Application {
              */
             menuExit.setOnAction(mouse -> {
                 exitStage.setScene(scenaE);
+                exitStage.initModality(Modality.APPLICATION_MODAL);
                 exitStage.showAndWait();
             });
 
@@ -263,6 +264,7 @@ public class MainGUI extends Application {
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
+                aboutStage.initModality(Modality.APPLICATION_MODAL);
                 aboutStage.showAndWait();
             });
             /**
@@ -488,6 +490,7 @@ public class MainGUI extends Application {
                             Scene scenaEvento = new Scene(mostraDati, 400, 100);
                             mostrami.setScene(scenaEvento);
 
+                            mostrami.initModality(Modality.APPLICATION_MODAL);
                             mostrami.showAndWait();
                         });
 
@@ -580,7 +583,8 @@ public class MainGUI extends Application {
                     || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
                     || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()){
 
-                alert.show();
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.showAndWait();
             }else{
                 Date time = new Date();
                 Calendar cal = Calendar.getInstance();
@@ -607,7 +611,8 @@ public class MainGUI extends Application {
         modal.add(typepicker, 1, 3);
         modal.add(create, 1, 4);
 
-        modalStage.show();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.showAndWait();
     }
 
     public static void main(String[] args) {
