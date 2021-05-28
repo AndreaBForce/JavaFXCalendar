@@ -31,14 +31,19 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Locale.setDefault(Locale.ITALY);
+        //TODO controllare mese perchè non ho individuato dove viene stampato
+        Locale.setDefault(Locale.ENGLISH);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
-        //VERSIONE DI BUILD (DA AGGIORNARE OGNI VOLTA)
-        //Sono i dati che compaiono nel about
-        //TODO DA RIMPIAZZARE CON LA VARIABILE BUILD
-        String NUM_VERSION = "1.5.0.2";
-        String BUILD_DATE = "07-05-2021";
+        //Parte della gestione delle propieta di build e di versione
+        Properties propietaBuild = new Properties();
+
+        try {
+            propietaBuild.load(MainGUI.class.getClassLoader().getResourceAsStream("pom.properties"));
+        }catch(Exception e){}
+
+        String NUM_VERSION = propietaBuild.getProperty("project.version");
+        String BUILD_DATE = propietaBuild.getProperty("project.build");
         String APP_NAME = "CalendarioRRR";
 
         try {
@@ -97,7 +102,7 @@ public class MainGUI extends Application {
             /**
              * CENTER
              */
-            //Creo bottoni
+            //Creo bottoni << >>
             HBox centerMen = new HBox();
             centerMen.setPadding(new Insets(5, 5, 5, 5));
             centerMen.setSpacing(10);
@@ -122,7 +127,7 @@ public class MainGUI extends Application {
              * BOTTOM
              */
 
-            //Qua avviene la creazione del calendario
+            //Qua avviene la creazione del calendario ovvero con il gridpane di ritorno
             setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
 
             /**
@@ -143,8 +148,16 @@ public class MainGUI extends Application {
             /**
              * SCENE
              */
-            Scene scene = new Scene(root, 1100, 1000);
+            //mostro la finestra principale
+            Scene scene = new Scene(root, 940, 900);
             stage.setScene(scene);
+
+            stage.setMinHeight(900);
+            stage.setMinWidth(940);
+
+            stage.setMaxHeight(980);
+            stage.setMaxWidth(980);
+
             stage.show();
             /**
              * FINE SCENE
@@ -234,8 +247,13 @@ public class MainGUI extends Application {
              * TOP
              */
             menuExit.setOnAction(mouse -> {
+                //TODO FIXARE QUI CHE LANCIA ECCEZIONE
+                //Cannot set modality once stage has been set visible
+                //Avviene quando si chiude la finestra di exit con annulla o con la x
+                //e poi dopo quando si vuole uscire non va e lancia eccezione
                 exitStage.setScene(scenaE);
                 exitStage.initModality(Modality.APPLICATION_MODAL);
+
                 exitStage.showAndWait();
             });
 
