@@ -32,7 +32,7 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Locale.setDefault(Locale.ITALIAN);
+        Locale.setDefault(Locale.ENGLISH);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
         //Parte della gestione delle propieta di build e di versione
@@ -250,10 +250,6 @@ public class MainGUI extends Application {
              * TOP
              */
             menuExit.setOnAction(mouse -> {
-                //TODO FIXARE QUI CHE LANCIA ECCEZIONE
-                //Cannot set modality once stage has been set visible
-                //Avviene quando si chiude la finestra di exit con annulla o con la x
-                //e poi dopo quando si vuole uscire non va e lancia eccezione
                 exitStage.setScene(scenaE);
 
                 exitStage.showAndWait();
@@ -506,9 +502,9 @@ public class MainGUI extends Application {
                             startE.setText(resourceBundle.getString("eventStart.testo") + ": " + ora.format(e.getStart()));
                             end.setText(resourceBundle.getString("eventEnd.testo") + ": " + ora.format(e.getEnd()));
 
-                            importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+e.getType().toString());
+                            importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+getNomeEventoPulito(e.getType()));
                             coloreE.setText("                                                                                                       ");
-                            coloreE.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                            coloreE.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
                             dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
                             mostraDati.setCenter(dati);
 
@@ -528,7 +524,7 @@ public class MainGUI extends Application {
 
     private void newEventModal(LocalDate date,BorderPane setupCalendario) {
         Stage modalStage = new Stage();
-        modalStage.setAlwaysOnTop(true);
+        //modalStage.setAlwaysOnTop(true);
 
         GridPane modal = new GridPane();
         modal.setPrefSize(600, 600);
@@ -630,8 +626,52 @@ public class MainGUI extends Application {
                 long end = cal.getTime().getTime();
                 //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
-                calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
+                Event checker;
+                checker = calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
                         .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarController.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+
+                /**
+                 * Qua gestione se evento é gia li presente o no
+                 */
+                Stage alertStage = new Stage();
+                alertStage.setTitle(resourceBundle.getString("alertStage.testo"));
+                alertStage.setAlwaysOnTop(true);
+                //borderpane padre
+                BorderPane exitBorder = new BorderPane();
+                //Label di sicurezza
+                Label sicuro = new Label();
+                sicuro.setText(resourceBundle.getString("alertEV.testo"));
+                sicuro.setFont(new Font("Arial", 15));
+                sicuro.setAlignment(Pos.CENTER);
+                exitBorder.setTop(sicuro);
+                HBox exitButtons = new HBox();
+                Button exitEsci = new Button();
+                exitEsci.setText(resourceBundle.getString("alExBt.testo"));
+
+                exitEsci.setStyle("-fx-background-color: #336699; ");
+                alertStage.initModality(Modality.APPLICATION_MODAL);
+
+                exitButtons.setSpacing(20);
+
+                exitEsci.setPrefSize(70, 30);
+                exitButtons.getChildren().addAll(exitEsci);
+                exitButtons.setAlignment(Pos.CENTER);
+                exitBorder.setCenter(exitButtons);
+
+                exitEsci.setOnAction(x -> {
+                    modalStage.close();
+                    alertStage.close();
+                });
+
+                //scena del meno di exit con annulla e socio
+                Scene scenaE = new Scene(exitBorder, 400, 100);
+
+                if(checker == null){
+                    alertStage.setScene(scenaE);
+                    alertStage.showAndWait();
+                    modalStage.close();
+                }
+
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 modalStage.close();
             }
