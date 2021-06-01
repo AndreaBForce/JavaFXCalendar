@@ -5,6 +5,8 @@ import ch.supsi.project.data_layer.FileReadWrite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CalendarContainer {
     private List<Event> calendar;
