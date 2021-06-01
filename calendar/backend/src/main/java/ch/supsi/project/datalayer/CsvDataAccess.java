@@ -1,30 +1,34 @@
-package ch.supsi.project.data_layer;
+package ch.supsi.project.datalayer;
 
-import ch.supsi.project.application_layer.Colour;
-import ch.supsi.project.service_layer.Type;
-import ch.supsi.project.service_layer.Event;
-import ch.supsi.project.service_layer.EventType;
+import ch.supsi.project.model.Colour;
+import ch.supsi.project.model.Event;
+import ch.supsi.project.model.EventType;
+import ch.supsi.project.model.Type;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public final class FileReadWrite {
+public class CsvDataAccess implements DataAccess {
     private final String input;
     private final String output;
 
-    public FileReadWrite(String input) {
+    public CsvDataAccess(String input) {
         this.input = input;
         this.output = input;
     }
 
-    public FileReadWrite(String input, String output) {
+    public CsvDataAccess(String input, String output) {
         this.input = input;
         this.output = output;
     }
 
-    public List<Event> read(){
+    @Override
+    public List<Event> read() {
         List<Event> eventList = new ArrayList<>();
 
         try {
@@ -47,7 +51,8 @@ public final class FileReadWrite {
         return eventList;
     }
 
-    public void append(Event event){
+    @Override
+    public void append(Event event) {
         File tmpFile = new File(output);
         try {
             if(tmpFile.createNewFile()){
@@ -66,29 +71,12 @@ public final class FileReadWrite {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void write(List<Event> eventList){
-        File tmpFile = new File(output);
-        try {
-            if(tmpFile.createNewFile()){
-                System.out.println("File creato");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try(FileWriter file = new FileWriter(output)) {
-
-            for(Event e : eventList){
-                String str = String.format("%s,%d,%d,%d,%d,%d\n", e.getTitle(), e.getDay().getTime(), e.getStart().getTime(), e.getEnd().getTime(), e.getType().getDescription().ordinal(), e.getType().getColour().ordinal());
-                file.write(str);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public void write(List<Event> eventList) {
+        for(Event e : eventList){
+            append(e);
         }
     }
 }

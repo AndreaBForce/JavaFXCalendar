@@ -1,14 +1,20 @@
-package ch.supsi.project.service_layer;
+package ch.supsi.project.applicationlayer;
 
-import ch.supsi.project.application_layer.Colour;
-import ch.supsi.project.data_layer.FileReadWrite;
+import ch.supsi.project.model.Colour;
+import ch.supsi.project.datalayer.CsvDataAccess;
+import ch.supsi.project.datalayer.DataAccess;
+import ch.supsi.project.datalayer.JsonDataAccess;
+import ch.supsi.project.model.Event;
+import ch.supsi.project.model.EventType;
+import ch.supsi.project.model.Type;
+import ch.supsi.project.servicelayer.DataService;
+import ch.supsi.project.servicelayer.DateComparator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarContainer {
-    private List<Event> calendar;
-    private FileReadWrite fileReadWrite;
+public class CalendarController {
+    private DataService dataService;
     public static final List<EventType> eventTypeList;
 
     static {
@@ -21,29 +27,20 @@ public class CalendarContainer {
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
     }
 
-    public CalendarContainer(String inputFile){
-        fileReadWrite = new FileReadWrite(inputFile);
-
-        calendar = fileReadWrite.read();
-    }
-
-    public CalendarContainer(String inputFile, String outputFile){
-        fileReadWrite = new FileReadWrite(inputFile,outputFile);
-
-        calendar = fileReadWrite.read();
+    public CalendarController(String inputFile, String type){
+        dataService = new DataService(inputFile,type);
     }
 
     public void addEvent(Event event){
-        calendar.add(event);
-        calendar.sort(new DateComparator());
-        fileReadWrite.append(event);
+        if(dataService.addEvent(event) != null){
+            System.out.println("Evento inserito");
+        }else{
+            System.out.println("L'evento non può essere inserito, spazio occupato");
+        }
     }
 
     public List<Event> getCalendar(){
-        List<Event> tmp = new ArrayList<>();
-        tmp.addAll(calendar);
-
-        return tmp;
+        return dataService.getCalendar();
     }
 
     public static EventType getEventType(Type type){
@@ -66,9 +63,5 @@ public class CalendarContainer {
         }else {
             return null;
         }
-    }
-
-    public void close(){
-        fileReadWrite.write(calendar);
     }
 }

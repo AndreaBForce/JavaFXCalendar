@@ -1,4 +1,4 @@
-package ch.supsi.project.application_layer;
+package ch.supsi.project.model;
 
 public enum Colour {
     BLUE("#ADD8E6"), RED("#FF0000"), GREEN("#00FF00"), ORANGE("#FFA500"), PURPLE("#800080");

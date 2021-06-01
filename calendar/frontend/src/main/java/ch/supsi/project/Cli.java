@@ -1,8 +1,10 @@
 package ch.supsi.project;
 
-import ch.supsi.project.application_layer.Colour;
-import ch.supsi.project.service_layer.Type;
-import ch.supsi.project.service_layer.*;
+import ch.supsi.project.applicationlayer.CalendarController;
+import ch.supsi.project.model.Colour;
+import ch.supsi.project.model.Event;
+import ch.supsi.project.model.EventType;
+import ch.supsi.project.model.Type;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public class Cli {
     public static void main(String[] args) {
-        CalendarContainer calendarContainer = new CalendarContainer("Prova.txt");
+        CalendarController calendarContainer = new CalendarController("Prova.csv", "CSV");
         List<EventType> eventTypeList = new ArrayList<>();
 
         eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
@@ -38,6 +40,5 @@ public class Cli {
 
         list.forEach(System.out::println);
 
-        calendarContainer.close();
     }
 }

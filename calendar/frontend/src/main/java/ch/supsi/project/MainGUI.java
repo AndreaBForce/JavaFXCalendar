@@ -1,7 +1,7 @@
 package ch.supsi.project;
 
-import ch.supsi.project.service_layer.CalendarContainer;
-import ch.supsi.project.service_layer.Event;
+import ch.supsi.project.applicationlayer.CalendarController;
+import ch.supsi.project.model.Event;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +25,7 @@ import java.util.*;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
-    CalendarContainer calendario = new CalendarContainer("Prova.txt");
+    CalendarController calendario = new CalendarController("Data.json","JSON");
     BorderPane setupCalendario = new BorderPane();
     ResourceBundle resourceBundle;
 
@@ -185,6 +185,7 @@ public class MainGUI extends Application {
             exitEsci.setText(resourceBundle.getString("exitExit.testo"));
             exitAnnulla.setText(resourceBundle.getString("exitCancel.testo"));
             exitEsci.setStyle("-fx-background-color: #336699; ");
+            exitStage.initModality(Modality.APPLICATION_MODAL);
 
             exitButtons.setSpacing(20);
             exitAnnulla.setPrefSize(70, 30);
@@ -206,6 +207,8 @@ public class MainGUI extends Application {
             Stage aboutStage = new Stage();
             aboutStage.setTitle(resourceBundle.getString("aboutStage.testo"));
             aboutStage.setAlwaysOnTop(true);
+            aboutStage.initModality(Modality.APPLICATION_MODAL);
+
             BorderPane borderAbout = new BorderPane();
             VBox vbAbout = new VBox();
             VBox appInfo = new VBox();
@@ -252,7 +255,6 @@ public class MainGUI extends Application {
                 //Avviene quando si chiude la finestra di exit con annulla o con la x
                 //e poi dopo quando si vuole uscire non va e lancia eccezione
                 exitStage.setScene(scenaE);
-                exitStage.initModality(Modality.APPLICATION_MODAL);
 
                 exitStage.showAndWait();
             });
@@ -287,7 +289,7 @@ public class MainGUI extends Application {
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
-                aboutStage.initModality(Modality.APPLICATION_MODAL);
+
                 aboutStage.showAndWait();
             });
             /**
@@ -323,7 +325,7 @@ public class MainGUI extends Application {
     }
 
 //socio che refresha il calendario
-    private GridPane updateCalendario(CalendarContainer calendario,BorderPane setupCalendario) {
+    private GridPane updateCalendario(CalendarController calendario, BorderPane setupCalendario) {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
 
@@ -600,7 +602,7 @@ public class MainGUI extends Application {
 
         final ObservableList appTypePicker = FXCollections.observableArrayList();
 
-        CalendarContainer.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
+        CalendarController.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
 
         Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
         ListView typepicker = new ListView(appTypePicker);
@@ -613,7 +615,7 @@ public class MainGUI extends Application {
                     || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
                     || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()){
 
-                alert.initModality(Modality.APPLICATION_MODAL);
+                //alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
             }else{
                 Date time = new Date();
@@ -626,7 +628,7 @@ public class MainGUI extends Application {
                 //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
                 calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarContainer.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarController.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 modalStage.close();
             }
@@ -643,7 +645,7 @@ public class MainGUI extends Application {
         modal.add(typepicker, 1, 3);
         modal.add(create, 1, 4);
 
-        modalStage.initModality(Modality.APPLICATION_MODAL);
+        //modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.showAndWait();
     }
 

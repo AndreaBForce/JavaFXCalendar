@@ -1,4 +1,6 @@
-package ch.supsi.project.service_layer;
+package ch.supsi.project.servicelayer;
+
+import ch.supsi.project.model.Event;
 
 import java.util.Comparator;
 
