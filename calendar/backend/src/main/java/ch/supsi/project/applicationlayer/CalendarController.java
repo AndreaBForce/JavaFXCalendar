@@ -12,6 +12,8 @@ import ch.supsi.project.servicelayer.DateComparator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CalendarController {
     private DataService dataService;
@@ -31,11 +33,13 @@ public class CalendarController {
         dataService = new DataService(inputFile,type);
     }
 
-    public void addEvent(Event event){
+    public Event addEvent(Event event){
         if(dataService.addEvent(event) != null){
             System.out.println("Evento inserito");
+            return event;
         }else{
             System.out.println("L'evento non può essere inserito, spazio occupato");
+            return null;
         }
     }
 

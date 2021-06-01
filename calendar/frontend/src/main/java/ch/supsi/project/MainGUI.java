@@ -2,6 +2,7 @@ package ch.supsi.project;
 
 import ch.supsi.project.applicationlayer.CalendarController;
 import ch.supsi.project.model.Event;
+import ch.supsi.project.model.EventType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,14 +26,13 @@ import java.util.*;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
-    CalendarController calendario = new CalendarController("Data.json","JSON");
+    CalendarController calendario = new CalendarController("Data.csv","CSV");
     BorderPane setupCalendario = new BorderPane();
     ResourceBundle resourceBundle;
 
     @Override
     public void start(Stage stage) throws Exception {
-        //TODO controllare mese perchè non ho individuato dove viene stampato
-        Locale.setDefault(Locale.ENGLISH);
+        Locale.setDefault(Locale.ITALIAN);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
         //Parte della gestione delle propieta di build e di versione
@@ -50,7 +50,7 @@ public class MainGUI extends Application {
             /**
              * STAGE PRINCIPALE
              */
-            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
+            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + getMeseTradotto().substring(0, 1) + "" + getMeseTradotto().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
 
             /**
              * ROOT
@@ -111,7 +111,7 @@ public class MainGUI extends Application {
             Button monthNext = new Button();
             Label monthCurrent = new Label();
 
-            monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+            monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
             monthCurrent.setFont(new Font("Arial", 20));
 
             monthNext.setText(">>");
@@ -271,14 +271,14 @@ public class MainGUI extends Application {
             //action event dei menu
             menuPrev.setOnAction(mouseEvent -> {
                 dataOra = dataOra.minusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             });
 
             //Sono gli action event dei menu
             menuNext.setOnAction(mouseEvent -> {
                 dataOra = dataOra.plusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                monthCurrent.setText(getMeseTradotto()  + " " + dataOra.getYear());
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             });
 
@@ -299,7 +299,7 @@ public class MainGUI extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dataOra = dataOra.plusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                     setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 }
             };
@@ -308,7 +308,7 @@ public class MainGUI extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dataOra = dataOra.minusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                     setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 }
             };
@@ -602,7 +602,10 @@ public class MainGUI extends Application {
 
         final ObservableList appTypePicker = FXCollections.observableArrayList();
 
-        CalendarController.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
+        //Qua aggiungo gli eventi
+        for (EventType e: CalendarController.eventTypeList) {
+            appTypePicker.add(getNomeEventoPulito(e));
+        }
 
         Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
         ListView typepicker = new ListView(appTypePicker);
@@ -649,6 +652,16 @@ public class MainGUI extends Application {
         modalStage.showAndWait();
     }
 
+    //Volendo gli metti la data come parametro
+    public String getMeseTradotto(){
+        String mese = dataOra.getMonth().toString().toLowerCase();
+        return resourceBundle.getString(mese+".testo");
+    }
+
+    public String getNomeEventoPulito(EventType e){
+        String evento = e.getDescription().toString().toLowerCase();
+        return resourceBundle.getString(evento+".testo");
+    }
     public static void main(String[] args) {
         launch(args);
 

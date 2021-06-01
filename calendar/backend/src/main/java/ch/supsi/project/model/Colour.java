@@ -11,4 +11,5 @@ public enum Colour {
     public String getHexCode(){
         return this.hexCode;
     }
+
 }
