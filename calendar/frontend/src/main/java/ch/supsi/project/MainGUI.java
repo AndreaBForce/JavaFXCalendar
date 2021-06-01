@@ -506,11 +506,11 @@ public class MainGUI extends Application {
         modalStage.setAlwaysOnTop(true);
 
         GridPane modal = new GridPane();
-        modal.setPrefSize(400, 800);
+        modal.setPrefSize(600, 600);
+
         modal.setHgap(10);
         modal.setVgap(10);
         modal.setPadding(new Insets(10, 10, 10, 10));
-        //modal.setGridLinesVisible(true);
 
         for (int k = 0; k < 3; k++) {
             ColumnConstraints colConst = new ColumnConstraints();
@@ -523,7 +523,12 @@ public class MainGUI extends Application {
             modal.getRowConstraints().add(rowConst);
         }
 
-        modalStage.setScene(new Scene(modal, 300, 400));
+        Scene scene = new Scene(modal);
+
+        modalStage.setMinHeight(modal.getPrefHeight());
+        modalStage.setMinWidth(modal.getPrefWidth());
+
+        modalStage.setScene(scene);
         modalStage.setTitle(date.toString());
         modalStage.initModality(Modality.WINDOW_MODAL);
 
