@@ -7,6 +7,7 @@ import ch.supsi.project.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DataService {
     private List<Event> calendar;
@@ -28,9 +29,7 @@ public class DataService {
         calendar = dataAccess.read();
     }
 
-    //TODO sort prima di restituire
     public Event addEvent(Event event){
-        //TODO ESTRARRE EVENTO IN BASE A DATA/ORA
         Event tmp = getEventByDayTime(event.getDay().getTime(),event.getStart().getTime(),event.getEnd().getTime());
         if(tmp == null){
             calendar.add(event);
@@ -56,6 +55,14 @@ public class DataService {
         }
 
         return event;
+    }
+
+    public List<Event> getEventsByMonth(long start, long end){
+        List<Event> tmp = new ArrayList<>();
+
+        tmp = calendar.stream().filter(e -> e.getDay().getTime() >= start && e.getDay().getTime() <= end).collect(Collectors.toList());
+
+        return tmp;
     }
 
     public List<Event> getCalendar(){

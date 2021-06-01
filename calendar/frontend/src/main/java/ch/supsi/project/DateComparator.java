@@ -1,4 +1,4 @@
-package ch.supsi.project.servicelayer;
+package ch.supsi.project;
 
 import ch.supsi.project.model.Event;
 

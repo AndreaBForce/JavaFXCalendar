@@ -324,6 +324,7 @@ public class MainGUI extends Application {
     private GridPane updateCalendario(CalendarController calendario, BorderPane setupCalendario) {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
+        tmpCal.sort(new DateComparator());
 
         //Gestione apici calendario
 

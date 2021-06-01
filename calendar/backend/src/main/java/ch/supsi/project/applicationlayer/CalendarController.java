@@ -1,19 +1,14 @@
 package ch.supsi.project.applicationlayer;
 
 import ch.supsi.project.model.Colour;
-import ch.supsi.project.datalayer.CsvDataAccess;
-import ch.supsi.project.datalayer.DataAccess;
-import ch.supsi.project.datalayer.JsonDataAccess;
 import ch.supsi.project.model.Event;
 import ch.supsi.project.model.EventType;
 import ch.supsi.project.model.Type;
 import ch.supsi.project.servicelayer.DataService;
-import ch.supsi.project.servicelayer.DateComparator;
+
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class CalendarController {
     private DataService dataService;
