@@ -27,21 +27,30 @@ public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
     CalendarContainer calendario = new CalendarContainer("Prova.txt");
     BorderPane setupCalendario = new BorderPane();
+    ResourceBundle resourceBundle;
 
     @Override
     public void start(Stage stage) throws Exception {
-        //VERSIONE DI BUILD (DA AGGIORNARE OGNI VOLTA)
-        //Sono i dati che compaiono nel about
-        //TODO DA RIMPIAZZARE CON LA VARIABILE BUILD
-        String NUM_VERSION = "1.5.0.2";
-        String BUILD_DATE = "07-05-2021";
+        //TODO controllare mese perchè non ho individuato dove viene stampato
+        Locale.setDefault(Locale.ENGLISH);
+        resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
+
+        //Parte della gestione delle propieta di build e di versione
+        Properties propietaBuild = new Properties();
+
+        try {
+            propietaBuild.load(MainGUI.class.getClassLoader().getResourceAsStream("pom.properties"));
+        }catch(Exception e){}
+
+        String NUM_VERSION = propietaBuild.getProperty("project.version");
+        String BUILD_DATE = propietaBuild.getProperty("project.build");
         String APP_NAME = "CalendarioRRR";
 
         try {
             /**
              * STAGE PRINCIPALE
              */
-            stage.setTitle("Finestra principale calendario (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
+            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
 
             /**
              * ROOT
@@ -49,6 +58,7 @@ public class MainGUI extends Application {
             //Inizializzo border pane principale
             BorderPane root = new BorderPane();
             root.setPrefSize(900, 700);
+            //root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"),resourceBundle);
 
             /**
              * TOP
@@ -60,25 +70,25 @@ public class MainGUI extends Application {
             top.setStyle("-fx-background-color: #336699;");
 
             //Menu tendina file -> exit
-            Menu menuFile = new Menu("File");
-            MenuItem menuExit = new MenuItem("Exit");
+            Menu menuFile = new Menu(resourceBundle.getString("menuFile.testo"));
+            MenuItem menuExit = new MenuItem(resourceBundle.getString("menuExit.testo"));
             menuFile.getItems().add(menuExit);
             MenuBar menuBar1 = new MenuBar();
             menuBar1.getMenus().add(menuFile);
 
             //Menu tendina edit -> new.. edit->previous edit->next
-            Menu menuEdit = new Menu("Edit");
-            MenuItem menuNew = new MenuItem("New...");
-            MenuItem menuPrev = new MenuItem("Previous");
-            MenuItem menuNext = new MenuItem("Next");
+            Menu menuEdit = new Menu(resourceBundle.getString("menuEdit.testo"));
+            MenuItem menuNew = new MenuItem(resourceBundle.getString("menuNew.testo"));
+            MenuItem menuPrev = new MenuItem(resourceBundle.getString("menuPrev.testo"));
+            MenuItem menuNext = new MenuItem(resourceBundle.getString("menuNext.testo"));
 
             menuEdit.getItems().addAll(menuNew, menuPrev, menuNext);
             MenuBar menuBar2 = new MenuBar();
             menuBar2.getMenus().add(menuEdit);
 
             //Menu tendina help -> about
-            Menu menuHelp = new Menu("Help");
-            MenuItem menuAbout = new MenuItem("About");
+            Menu menuHelp = new Menu(resourceBundle.getString("menuHelp.testo"));
+            MenuItem menuAbout = new MenuItem(resourceBundle.getString("menuAbout.testo"));
             menuHelp.getItems().add(menuAbout);
             MenuBar menuBar3 = new MenuBar();
             menuBar3.getMenus().add(menuHelp);
@@ -92,7 +102,7 @@ public class MainGUI extends Application {
             /**
              * CENTER
              */
-            //Creo bottoni
+            //Creo bottoni << >>
             HBox centerMen = new HBox();
             centerMen.setPadding(new Insets(5, 5, 5, 5));
             centerMen.setSpacing(10);
@@ -117,7 +127,7 @@ public class MainGUI extends Application {
              * BOTTOM
              */
 
-            //Qua avviene la creazione del calendario
+            //Qua avviene la creazione del calendario ovvero con il gridpane di ritorno
             setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
 
             /**
@@ -138,8 +148,16 @@ public class MainGUI extends Application {
             /**
              * SCENE
              */
-            Scene scene = new Scene(root, 1100, 1000);
+            //mostro la finestra principale
+            Scene scene = new Scene(root, 940, 900);
             stage.setScene(scene);
+
+            stage.setMinHeight(900);
+            stage.setMinWidth(940);
+
+            stage.setMaxHeight(980);
+            stage.setMaxWidth(980);
+
             stage.show();
             /**
              * FINE SCENE
@@ -151,21 +169,21 @@ public class MainGUI extends Application {
             //Creo parte per gestione del modale dell'exit
             //quindi un bottone con sei sicuro di voler uscire
             Stage exitStage = new Stage();
-            exitStage.setTitle("Confirm Exit");
+            exitStage.setTitle(resourceBundle.getString("exitStage.testo"));
             exitStage.setAlwaysOnTop(true);
             //borderpane padre
             BorderPane exitBorder = new BorderPane();
             //Label di sicurezza
             Label sicuro = new Label();
-            sicuro.setText("Are you sure you want to exit?");
+            sicuro.setText(resourceBundle.getString("sure.testo"));
             sicuro.setFont(new Font("Arial", 15));
             sicuro.setAlignment(Pos.CENTER);
             exitBorder.setTop(sicuro);
             HBox exitButtons = new HBox();
             Button exitAnnulla = new Button();
             Button exitEsci = new Button();
-            exitEsci.setText("Exit");
-            exitAnnulla.setText("Cancel");
+            exitEsci.setText(resourceBundle.getString("exitExit.testo"));
+            exitAnnulla.setText(resourceBundle.getString("exitCancel.testo"));
             exitEsci.setStyle("-fx-background-color: #336699; ");
 
             exitButtons.setSpacing(20);
@@ -186,7 +204,7 @@ public class MainGUI extends Application {
              */
             //Creo la parte della gestione della versione
             Stage aboutStage = new Stage();
-            aboutStage.setTitle("About");
+            aboutStage.setTitle(resourceBundle.getString("aboutStage.testo"));
             aboutStage.setAlwaysOnTop(true);
             BorderPane borderAbout = new BorderPane();
             VBox vbAbout = new VBox();
@@ -201,11 +219,11 @@ public class MainGUI extends Application {
             Label ron = new Label();
             Label ric = new Label();
 
-            version.setText("Current Version = " + NUM_VERSION);
-            buildDate.setText("Build date = " + BUILD_DATE);
-            app_name.setText("App name = " + APP_NAME);
+            version.setText(resourceBundle.getString("aboutVer.testo") + " = " + NUM_VERSION);
+            buildDate.setText(resourceBundle.getString("aboutDate.testo") + " = " + BUILD_DATE);
+            app_name.setText(resourceBundle.getString("aboutName.testo") + " = " + APP_NAME);
 
-            dev.setText("Developed by: ");
+            dev.setText(resourceBundle.getString("aboutDev.testo") + ": ");
             rav.setText("Davide Ravani  davide.ravani@student.supsi.ch");
             ron.setText("Lorenzo Ronzani  lorenzo.ronzani@student.supsi.ch");
             ric.setText("Andrea Riccardi  andrea.riccardi@student.supsi.ch");
@@ -229,8 +247,13 @@ public class MainGUI extends Application {
              * TOP
              */
             menuExit.setOnAction(mouse -> {
+                //TODO FIXARE QUI CHE LANCIA ECCEZIONE
+                //Cannot set modality once stage has been set visible
+                //Avviene quando si chiude la finestra di exit con annulla o con la x
+                //e poi dopo quando si vuole uscire non va e lancia eccezione
                 exitStage.setScene(scenaE);
                 exitStage.initModality(Modality.APPLICATION_MODAL);
+
                 exitStage.showAndWait();
             });
 
@@ -307,37 +330,37 @@ public class MainGUI extends Application {
         //Gestione apici calendario
 
         Label lun = new Label();
-        lun.setText("Monday");
+        lun.setText(resourceBundle.getString("monday.testo"));
         lun.setStyle("-fx-font-weight: bold");
         lun.setFont(new Font("Arial", 15));
 
         Label dom = new Label();
-        dom.setText("Sunday");
+        dom.setText(resourceBundle.getString("sunday.testo"));
         dom.setStyle("-fx-font-weight: bold");
         dom.setFont(new Font("Arial", 15));
 
         Label mart = new Label();
-        mart.setText("Tuesday");
+        mart.setText(resourceBundle.getString("tuesday.testo"));
         mart.setStyle("-fx-font-weight: bold");
         mart.setFont(new Font("Arial", 15));
 
         Label merc = new Label();
-        merc.setText("Wednesday");
+        merc.setText(resourceBundle.getString("wednesday.testo"));
         merc.setStyle("-fx-font-weight: bold");
         merc.setFont(new Font("Arial", 15));
 
         Label giov = new Label();
-        giov.setText("Thursday");
+        giov.setText(resourceBundle.getString("thursday.testo"));
         giov.setStyle("-fx-font-weight: bold");
         giov.setFont(new Font("Arial", 15));
 
         Label vene = new Label();
-        vene.setText("Friday");
+        vene.setText(resourceBundle.getString("friday.testo"));
         vene.setStyle("-fx-font-weight: bold");
         vene.setFont(new Font("Arial", 15));
 
         Label sab = new Label();
-        sab.setText("Saturday");
+        sab.setText(resourceBundle.getString("saturday.testo"));
         sab.setStyle("-fx-font-weight: bold");
         sab.setFont(new Font("Arial", 15));
 
@@ -466,7 +489,7 @@ public class MainGUI extends Application {
                         hBoxDay.setOnMouseClicked(mouseEvent -> {
                             Stage mostrami = new Stage();
                             mostrami.setAlwaysOnTop(true);
-                            mostrami.setTitle("Evento selezionato");
+                            mostrami.setTitle(resourceBundle.getString("eventSelected.testo"));
 
                             BorderPane mostraDati = new BorderPane();
                             VBox dati = new VBox();
@@ -476,12 +499,12 @@ public class MainGUI extends Application {
                             Label end = new Label();
                             Label importanzaE = new Label();
                             Label coloreE = new Label();
-                            nome.setText("Titolo evento: " + e.getTitle());
-                            data.setText("Data evento: " + e.getDay().toString());
-                            startE.setText("Orario inizio: " + ora.format(e.getStart()));
-                            end.setText("Orario fine: " + ora.format(e.getEnd()));
+                            nome.setText(resourceBundle.getString("eventTitle.testo") + ": " + e.getTitle());
+                            data.setText(resourceBundle.getString("eventDate.testo") + ": " + e.getDay().toString());
+                            startE.setText(resourceBundle.getString("eventStart.testo") + ": " + ora.format(e.getStart()));
+                            end.setText(resourceBundle.getString("eventEnd.testo") + ": " + ora.format(e.getEnd()));
 
-                            importanzaE.setText("Tipo evento: "+e.getType().toString());
+                            importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+e.getType().toString());
                             coloreE.setText("                                                                                                       ");
                             coloreE.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
                             dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
@@ -532,7 +555,7 @@ public class MainGUI extends Application {
         modalStage.setTitle(date.toString());
         modalStage.initModality(Modality.WINDOW_MODAL);
 
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Missing one or more fields.");
+        Alert alert = new Alert(Alert.AlertType.WARNING, resourceBundle.getString("eventAlert.testo"));
         // Necessari per mostrare alert davanti al modal
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(modalStage);
@@ -543,7 +566,7 @@ public class MainGUI extends Application {
         DatePicker datePicker = new DatePicker();
         datePicker.setValue(date);
         TextField nomeEventoInput = new TextField();
-        Label nomeEvento = new Label("Nome evento");
+        Label nomeEvento = new Label(resourceBundle.getString("eventTitle.testo"));
 
         final ObservableList<String> appTimepicker = FXCollections.observableArrayList();
         ArrayList<Calendar> orari = new ArrayList<>();
@@ -569,7 +592,7 @@ public class MainGUI extends Application {
         }
         orari.stream().forEach(c -> appTimepicker.add(format.format(c.getTime())));
 
-        Label selezioneOrario = new Label("Selezione orario");
+        Label selezioneOrario = new Label(resourceBundle.getString("eventTimeSelect.testo"));
         ListView timepickerStart = new ListView(appTimepicker);
         ListView timepickerEnd = new ListView(appTimepicker);
 
@@ -577,10 +600,10 @@ public class MainGUI extends Application {
 
         CalendarContainer.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
 
-        Label selezioneTipoEvento = new Label("Selezione tipo evento");
+        Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
         ListView typepicker = new ListView(appTypePicker);
 
-        Button create = new Button("Create");
+        Button create = new Button(resourceBundle.getString("eventCreate.testo"));
 
         create.setOnMouseClicked(mouse -> {
             if(nomeEventoInput.getText().isEmpty()
