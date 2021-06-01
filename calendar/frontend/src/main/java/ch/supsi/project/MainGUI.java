@@ -323,7 +323,7 @@ public class MainGUI extends Application {
     }
 
 //socio che refresha il calendario
-    public GridPane updateCalendario(CalendarContainer calendario,BorderPane setupCalendario) {
+    private GridPane updateCalendario(CalendarContainer calendario,BorderPane setupCalendario) {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
 
@@ -456,7 +456,7 @@ public class MainGUI extends Application {
         return calendar;
     }
 
-    void popolaGriglia(int datesettter,SimpleDateFormat ft,List<Event> tmpCal,SimpleDateFormat ora,int anno,int mese,VBox eventiVerticali){
+    private void popolaGriglia(int datesettter,SimpleDateFormat ft,List<Event> tmpCal,SimpleDateFormat ora,int anno,int mese,VBox eventiVerticali){
 
         for (Event e: tmpCal) {
             int annoD = Integer.valueOf(ft.format(e.getDay()).substring(0,4));
@@ -524,7 +524,7 @@ public class MainGUI extends Application {
 
     }
 
-    public void newEventModal(LocalDate date,BorderPane setupCalendario) {
+    private void newEventModal(LocalDate date,BorderPane setupCalendario) {
         Stage modalStage = new Stage();
         modalStage.setAlwaysOnTop(true);
 
