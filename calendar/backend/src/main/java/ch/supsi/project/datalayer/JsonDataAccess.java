@@ -46,10 +46,10 @@ public class JsonDataAccess implements DataAccess {
                 long day = (long) tmp.get("day");
                 long start = (long) tmp.get("start");
                 long end = (long) tmp.get("end");
-                int description = (int) tmp.get("description");
-                int colour = (int) tmp.get("colour");
+                long description = (long) tmp.get("description");
+                long colour = (long) tmp.get("colour");
 
-                Event event = new Event(title,day,start,end,new EventType(Type.values()[description], Colour.values()[colour]));
+                Event event = new Event(title,day,start,end,new EventType(Type.values()[(int) description], Colour.values()[(int) colour]));
                 eventList.add(event);
             }
         } catch (FileNotFoundException e) {
@@ -65,33 +65,53 @@ public class JsonDataAccess implements DataAccess {
 
     @Override
     public void append(Event event) {
+        boolean fileNew = false;
         File tmpFile = new File(output);
         try {
             if(tmpFile.createNewFile()){
                 System.out.println("File creato");
+                fileNew = true;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        JSONObject jsonEventDetails = new JSONObject();
-        jsonEventDetails.put("title",event.getTitle());
-        jsonEventDetails.put("day",event.getDay().getTime());
-        jsonEventDetails.put("start",event.getStart().getTime());
-        jsonEventDetails.put("end",event.getEnd().getTime());
-        jsonEventDetails.put("description",event.getType().getDescription().ordinal());
-        jsonEventDetails.put("colour",event.getType().getColour().ordinal());
+        JSONArray eventList;
 
-        JSONObject jsonEvent = new JSONObject();
-        jsonEvent.put("event",jsonEventDetails);
+        try(FileReader reader = new FileReader(input)) {
+            if(!fileNew){
+                JSONParser jsonParser = new JSONParser();
+                Object obj = jsonParser.parse(reader);
+                eventList = (JSONArray) obj;
+            }else{
+                eventList = new JSONArray();
+            }
 
-        try (FileWriter file = new FileWriter(output,true)) {
-            //We can write any JSONArray or JSONObject instance to the file
-            file.write(jsonEvent.toJSONString());
+            JSONObject jsonEventDetails = new JSONObject();
+            jsonEventDetails.put("title",event.getTitle());
+            jsonEventDetails.put("day",event.getDay().getTime());
+            jsonEventDetails.put("start",event.getStart().getTime());
+            jsonEventDetails.put("end",event.getEnd().getTime());
+            jsonEventDetails.put("description",event.getType().getDescription().ordinal());
+            jsonEventDetails.put("colour",event.getType().getColour().ordinal());
+
+            JSONObject jsonEvent = new JSONObject();
+            jsonEvent.put("event",jsonEventDetails);
+
+            eventList.add(jsonEvent);
+
+            FileWriter file = new FileWriter(output);
+
+            file.write(eventList.toJSONString());
             file.flush();
+            file.close();
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
