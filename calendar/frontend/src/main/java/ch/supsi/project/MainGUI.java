@@ -563,10 +563,12 @@ public class MainGUI extends Application {
         //Controllare a cosa serve
         //modalStage.initOwner(((Node)event.getSource()).getScene().getWindow() );
 
-        DatePicker datePicker = new DatePicker();
-        datePicker.setValue(date);
         TextField nomeEventoInput = new TextField();
         Label nomeEvento = new Label(resourceBundle.getString("eventTitle.testo"));
+
+        DatePicker datePicker = new DatePicker();
+        datePicker.setValue(date);
+        Label selezioneData = new Label(resourceBundle.getString("eventDate.testo"));
 
         final ObservableList<String> appTimepicker = FXCollections.observableArrayList();
         ArrayList<Calendar> orari = new ArrayList<>();
@@ -632,10 +634,12 @@ public class MainGUI extends Application {
 
         modal.add(nomeEvento, 0, 0);
         modal.add(nomeEventoInput, 1, 0);
+        modal.add(selezioneData, 0, 1);
         modal.add(datePicker, 1, 1);
         modal.add(selezioneOrario, 0, 2);
         modal.add(timepickerStart, 1, 2);
         modal.add(timepickerEnd, 2, 2);
+        modal.add(selezioneTipoEvento, 0, 3);
         modal.add(typepicker, 1, 3);
         modal.add(create, 1, 4);
 
