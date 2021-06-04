@@ -1,8 +1,6 @@
-package ch.supsi.project.service_layer;
+package ch.supsi.project.model;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Event {

@@ -1,7 +1,8 @@
 package ch.supsi.project;
 
-import ch.supsi.project.service_layer.CalendarContainer;
-import ch.supsi.project.service_layer.Event;
+import ch.supsi.project.applicationlayer.CalendarController;
+import ch.supsi.project.model.Event;
+import ch.supsi.project.model.EventType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,13 +31,12 @@ import static java.util.Calendar.*;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
-    CalendarContainer calendario = new CalendarContainer("Prova.txt");
+    CalendarController calendario = new CalendarController("Data.csv","CSV");
     BorderPane setupCalendario = new BorderPane();
     ResourceBundle resourceBundle;
 
     @Override
     public void start(Stage stage) throws Exception {
-        //TODO controllare mese perchè non ho individuato dove viene stampato
         Locale.setDefault(Locale.ENGLISH);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
@@ -55,7 +55,7 @@ public class MainGUI extends Application {
             /**
              * STAGE PRINCIPALE
              */
-            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + dataOra.getMonth().toString().substring(0, 1) + "" + dataOra.getMonth().toString().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
+            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + getMeseTradotto().substring(0, 1) + "" + getMeseTradotto().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
 
             /**
              * ROOT
@@ -116,7 +116,7 @@ public class MainGUI extends Application {
             Button monthNext = new Button();
             Label monthCurrent = new Label();
 
-            monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+            monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
             monthCurrent.setFont(new Font("Arial", 20));
 
             monthNext.setText(">>");
@@ -190,6 +190,7 @@ public class MainGUI extends Application {
             exitEsci.setText(resourceBundle.getString("exitExit.testo"));
             exitAnnulla.setText(resourceBundle.getString("exitCancel.testo"));
             exitEsci.setStyle("-fx-background-color: #336699; ");
+            exitStage.initModality(Modality.APPLICATION_MODAL);
 
             exitButtons.setSpacing(20);
             exitAnnulla.setPrefSize(70, 30);
@@ -211,6 +212,8 @@ public class MainGUI extends Application {
             Stage aboutStage = new Stage();
             aboutStage.setTitle(resourceBundle.getString("aboutStage.testo"));
             aboutStage.setAlwaysOnTop(true);
+            aboutStage.initModality(Modality.APPLICATION_MODAL);
+
             BorderPane borderAbout = new BorderPane();
             VBox vbAbout = new VBox();
             VBox appInfo = new VBox();
@@ -252,12 +255,7 @@ public class MainGUI extends Application {
              * TOP
              */
             menuExit.setOnAction(mouse -> {
-                //TODO FIXARE QUI CHE LANCIA ECCEZIONE
-                //Cannot set modality once stage has been set visible
-                //Avviene quando si chiude la finestra di exit con annulla o con la x
-                //e poi dopo quando si vuole uscire non va e lancia eccezione
                 exitStage.setScene(scenaE);
-                exitStage.initModality(Modality.APPLICATION_MODAL);
 
                 exitStage.showAndWait();
             });
@@ -274,14 +272,14 @@ public class MainGUI extends Application {
             //action event dei menu
             menuPrev.setOnAction(mouseEvent -> {
                 dataOra = dataOra.minusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             });
 
             //Sono gli action event dei menu
             menuNext.setOnAction(mouseEvent -> {
                 dataOra = dataOra.plusMonths(1);
-                monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                monthCurrent.setText(getMeseTradotto()  + " " + dataOra.getYear());
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             });
 
@@ -292,7 +290,7 @@ public class MainGUI extends Application {
 
             menuAbout.setOnAction(x -> {
                 aboutStage.setScene(aboutScene);
-                aboutStage.initModality(Modality.APPLICATION_MODAL);
+
                 aboutStage.showAndWait();
             });
             /**
@@ -302,7 +300,7 @@ public class MainGUI extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dataOra = dataOra.plusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                     setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 }
             };
@@ -311,7 +309,7 @@ public class MainGUI extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dataOra = dataOra.minusMonths(1);
-                    monthCurrent.setText(dataOra.getMonth().toString() + " " + dataOra.getYear());
+                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
                     setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 }
             };
@@ -328,9 +326,10 @@ public class MainGUI extends Application {
     }
 
 //socio che refresha il calendario
-    private GridPane updateCalendario(CalendarContainer calendario,BorderPane setupCalendario) {
+    private GridPane updateCalendario(CalendarController calendario, BorderPane setupCalendario) {
         GridPane calendar = new GridPane();
         List<Event> tmpCal = calendario.getCalendar();
+        tmpCal.sort(new DateComparator());
 
         //Gestione apici calendario
         Label[] daysOfTheWeek = {
@@ -416,9 +415,75 @@ public class MainGUI extends Application {
         return Cell.ft.format(c.getTime());
     }
 
+    /*private void popolaGriglia(int datesettter,SimpleDateFormat ft,List<Event> tmpCal,SimpleDateFormat ora,int anno,int mese,VBox eventiVerticali){
+
+        for (Event e: tmpCal) {
+            int annoD = Integer.valueOf(ft.format(e.getDay()).substring(0,4));
+            int meseD = Integer.valueOf(ft.format(e.getDay()).substring(5,7));
+            int giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8,10));
+
+            //bruttissimo if che controlla se la data è la seguente
+            //In futuro andra gestito con Date cosi basta solo un compare
+            if (anno == annoD) {
+                if (meseD == mese) {
+                    if (giornoD == datesettter) {
+                        HBox hBoxDay = new HBox();
+                        hBoxDay.setSpacing(5);
+                        String titolo = e.getTitle();
+                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
+                        Label impegno = new Label();
+                        Label orario = new Label();
+                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
+
+                        if (titolo.length() > 4) {
+                            impegno.setText(titolo.substring(0, 4));
+                        } else {
+                            impegno.setText(e.getTitle());
+                        }
+                        hBoxDay.getChildren().addAll(impegno, orario);
+                        hBoxDay.setAlignment(Pos.CENTER);
+                        eventiVerticali.getChildren().add(hBoxDay);
+
+
+                        hBoxDay.setOnMouseClicked(mouseEvent -> {
+                            Stage mostrami = new Stage();
+                            mostrami.setAlwaysOnTop(true);
+                            mostrami.setTitle(resourceBundle.getString("eventSelected.testo"));
+
+                            BorderPane mostraDati = new BorderPane();
+                            VBox dati = new VBox();
+                            Label nome = new Label();
+                            Label data = new Label();
+                            Label startE = new Label();
+                            Label end = new Label();
+                            Label importanzaE = new Label();
+                            Label coloreE = new Label();
+                            nome.setText(resourceBundle.getString("eventTitle.testo") + ": " + e.getTitle());
+                            data.setText(resourceBundle.getString("eventDate.testo") + ": " + e.getDay().toString());
+                            startE.setText(resourceBundle.getString("eventStart.testo") + ": " + ora.format(e.getStart()));
+                            end.setText(resourceBundle.getString("eventEnd.testo") + ": " + ora.format(e.getEnd()));
+
+                            importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+getNomeEventoPulito(e.getType()));
+                            coloreE.setText("                                                                                                       ");
+                            coloreE.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
+                            dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
+                            mostraDati.setCenter(dati);
+
+                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
+                            mostrami.setScene(scenaEvento);
+
+                            mostrami.initModality(Modality.APPLICATION_MODAL);
+                            mostrami.showAndWait();
+                        });
+
+                    }
+                }
+            }
+        }*/
+
     private void newEventModal(LocalDate date,BorderPane setupCalendario) {
         Stage modalStage = new Stage();
-        modalStage.setAlwaysOnTop(true);
+        //modalStage.setAlwaysOnTop(true);
 
         GridPane modal = new GridPane();
         modal.setPrefSize(600, 600);
@@ -492,7 +557,10 @@ public class MainGUI extends Application {
 
         final ObservableList appTypePicker = FXCollections.observableArrayList();
 
-        CalendarContainer.eventTypeList.stream().forEach(e -> appTypePicker.add(e.getDescription()));
+        //Qua aggiungo gli eventi
+        for (EventType e: CalendarController.eventTypeList) {
+            appTypePicker.add(getNomeEventoPulito(e));
+        }
 
         Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
         ListView typepicker = new ListView(appTypePicker);
@@ -505,7 +573,7 @@ public class MainGUI extends Application {
                     || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
                     || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()){
 
-                alert.initModality(Modality.APPLICATION_MODAL);
+                //alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
             }else{
                 Date time = new Date();
@@ -517,8 +585,52 @@ public class MainGUI extends Application {
                 long end = cal.getTime().getTime();
                 //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
 
-                calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarContainer.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+                Event checker;
+                checker = calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
+                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarController.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
+
+                /**
+                 * Qua gestione se evento é gia li presente o no
+                 */
+                Stage alertStage = new Stage();
+                alertStage.setTitle(resourceBundle.getString("alertStage.testo"));
+                alertStage.setAlwaysOnTop(true);
+                //borderpane padre
+                BorderPane exitBorder = new BorderPane();
+                //Label di sicurezza
+                Label sicuro = new Label();
+                sicuro.setText(resourceBundle.getString("alertEV.testo"));
+                sicuro.setFont(new Font("Arial", 15));
+                sicuro.setAlignment(Pos.CENTER);
+                exitBorder.setTop(sicuro);
+                HBox exitButtons = new HBox();
+                Button exitEsci = new Button();
+                exitEsci.setText(resourceBundle.getString("alExBt.testo"));
+
+                exitEsci.setStyle("-fx-background-color: #336699; ");
+                alertStage.initModality(Modality.APPLICATION_MODAL);
+
+                exitButtons.setSpacing(20);
+
+                exitEsci.setPrefSize(70, 30);
+                exitButtons.getChildren().addAll(exitEsci);
+                exitButtons.setAlignment(Pos.CENTER);
+                exitBorder.setCenter(exitButtons);
+
+                exitEsci.setOnAction(x -> {
+                    modalStage.close();
+                    alertStage.close();
+                });
+
+                //scena del meno di exit con annulla e socio
+                Scene scenaE = new Scene(exitBorder, 400, 100);
+
+                if(checker == null){
+                    alertStage.setScene(scenaE);
+                    alertStage.showAndWait();
+                    modalStage.close();
+                }
+
                 setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
                 modalStage.close();
             }
@@ -535,10 +647,20 @@ public class MainGUI extends Application {
         modal.add(typepicker, 1, 3);
         modal.add(create, 1, 4);
 
-        modalStage.initModality(Modality.APPLICATION_MODAL);
+        //modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.showAndWait();
     }
 
+    //Volendo gli metti la data come parametro
+    public String getMeseTradotto(){
+        String mese = dataOra.getMonth().toString().toLowerCase();
+        return resourceBundle.getString(mese+".testo");
+    }
+
+    public String getNomeEventoPulito(EventType e){
+        String evento = e.getDescription().toString().toLowerCase();
+        return resourceBundle.getString(evento+".testo");
+    }
     public static void main(String[] args) {
         launch(args);
 
