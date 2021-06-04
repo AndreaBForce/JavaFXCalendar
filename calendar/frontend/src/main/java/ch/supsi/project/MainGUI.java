@@ -19,9 +19,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+
+import static java.util.Calendar.*;
 
 public class MainGUI extends Application {
     static LocalDate dataOra = LocalDate.now();
@@ -328,200 +333,87 @@ public class MainGUI extends Application {
         List<Event> tmpCal = calendario.getCalendar();
 
         //Gestione apici calendario
+        Label[] daysOfTheWeek = {
+                new Label(resourceBundle.getString("monday.testo")),
+                new Label(resourceBundle.getString("tuesday.testo")),
+                new Label(resourceBundle.getString("wednesday.testo")),
+                new Label(resourceBundle.getString("thursday.testo")),
+                new Label(resourceBundle.getString("friday.testo")),
+                new Label(resourceBundle.getString("saturday.testo")),
+                new Label(resourceBundle.getString("sunday.testo")),
+        };
 
-        Label lun = new Label();
-        lun.setText(resourceBundle.getString("monday.testo"));
-        lun.setStyle("-fx-font-weight: bold");
-        lun.setFont(new Font("Arial", 15));
+        for (int i = 0; i < daysOfTheWeek.length; i++) {
+            daysOfTheWeek[i].setStyle("-fx-font-weight: bold");
+            daysOfTheWeek[i].setFont(new Font("Arial", 15));
 
-        Label dom = new Label();
-        dom.setText(resourceBundle.getString("sunday.testo"));
-        dom.setStyle("-fx-font-weight: bold");
-        dom.setFont(new Font("Arial", 15));
+            calendar.add(daysOfTheWeek[i], i+1, 0);
+        }
 
-        Label mart = new Label();
-        mart.setText(resourceBundle.getString("tuesday.testo"));
-        mart.setStyle("-fx-font-weight: bold");
-        mart.setFont(new Font("Arial", 15));
+        boolean beforeMonth = true;
+        boolean afterMonth = false;
 
-        Label merc = new Label();
-        merc.setText(resourceBundle.getString("wednesday.testo"));
-        merc.setStyle("-fx-font-weight: bold");
-        merc.setFont(new Font("Arial", 15));
+        Calendar start = Calendar.getInstance();
 
-        Label giov = new Label();
-        giov.setText(resourceBundle.getString("thursday.testo"));
-        giov.setStyle("-fx-font-weight: bold");
-        giov.setFont(new Font("Arial", 15));
+        LocalDate date = LocalDate.of(dataOra.getYear(), dataOra.getMonth(), 1);
+        LocalDate firstMonday = date.with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
+        start.set(DAY_OF_MONTH, firstMonday.getDayOfMonth());
+        if(start.get(DAY_OF_MONTH) != 1)
+            start.add(DATE, -7);
+        else
+            beforeMonth = false;
 
-        Label vene = new Label();
-        vene.setText(resourceBundle.getString("friday.testo"));
-        vene.setStyle("-fx-font-weight: bold");
-        vene.setFont(new Font("Arial", 15));
-
-        Label sab = new Label();
-        sab.setText(resourceBundle.getString("saturday.testo"));
-        sab.setStyle("-fx-font-weight: bold");
-        sab.setFont(new Font("Arial", 15));
-
-        calendar.add(dom, 1, 0);
-        calendar.add(lun, 2, 0);
-        calendar.add(mart, 3, 0);
-        calendar.add(merc, 4, 0);
-        calendar.add(giov, 5, 0);
-        calendar.add(vene, 6,0);
-        calendar.add(sab, 7,0);
+        int i = 1;
+        int j = 1;
+        int count = 0;
+        while (count < 42) {
+            Calendar dum = Calendar.getInstance();
 
 
-        double s = 130; // side of rectangle
-        LocalDate start = dataOra.withDayOfMonth(1);
-        int dayofWeek = start.getDayOfWeek().getValue();
-        int monthlen = start.lengthOfMonth();
-        int mese = start.getMonth().getValue();
-        int anno = start.getYear();
-        int count = 1, datesettter = 1,mesePrima = start.minusMonths(1).lengthOfMonth(),meseDopo = 1;;
+            List<Event> eventsOfToday = new ArrayList<>();
+            for (Event e : tmpCal) {
+                dum.set(DATE, e.getDay().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfMonth());
 
-        //date formatter
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd");
-        SimpleDateFormat ora = new SimpleDateFormat("HH:mm");
-
-        //Ciclo for che crea la scacchiera del mese
-        for (int i = 1; i < 7; i++) {
-            for (int j = 1; j < 8; j++) {
-                BorderPane casella = new BorderPane();
-                BorderPane casella_text = new BorderPane();
-                Label num_day = new Label();
-                num_day.setStyle("-fx-font-weight: bold");
-
-                VBox eventiVerticali = new VBox();
-
-                Rectangle r = new Rectangle(s, s, s, s);
-
-                //setto background socio bianco e bordi
-                r.setFill(Color.WHITE);
-                r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
-
-                if (count <= dayofWeek) {
-                    //Qua gestisco la parte dei giorni prima del mese
-                    num_day.setText("  "+(mesePrima-dayofWeek+count));
-
-                    popolaGriglia(mesePrima-dayofWeek+count,ft,tmpCal,ora,anno,mese-1,eventiVerticali);
-
-                    r.setFill(Color.GRAY);
-                    r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
-
-                } else if (datesettter <= monthlen) {
-                    num_day.setText("  " + (datesettter));
-
-                    popolaGriglia(datesettter,ft,tmpCal,ora,anno,mese,eventiVerticali);
-
-                    datesettter++;
-                } else {
-                    num_day.setText("  "+(meseDopo));
-
-                    popolaGriglia(meseDopo,ft,tmpCal,ora,anno,mese+1,eventiVerticali);
-                    meseDopo++;
-                    r.setFill(Color.GRAY);
-                    r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+                if (dum.get(DAY_OF_MONTH) == start.get(DAY_OF_MONTH)
+                        && dum.get(MONTH) == start.get(MONTH)
+                        && dum.get(YEAR) == start.get(YEAR)){
+                    eventsOfToday.add(e);
                 }
-
-                count++;
-
-                casella.setCenter(r);
-                num_day.setAlignment(Pos.TOP_LEFT);
-
-                casella_text.setTop(num_day);
-
-                StackPane cella = new StackPane(casella, casella_text);
-
-                if (!num_day.getText().equals("")) {
-                    final LocalDate date = start.plusDays(datesettter - 2);
-                    //da metter qua dentro la gestione migliore della data
-                    cella.setOnMouseClicked(mouseEvent -> {
-                        if (mouseEvent.getClickCount() == 2) {
-                            newEventModal(date,setupCalendario);
-
-                        }
-                    });
-                }
-
-                eventiVerticali.setAlignment(Pos.TOP_CENTER);
-                casella_text.setCenter(eventiVerticali);
-
-                calendar.add(cella, j, i);
             }
+
+            Cell c = new Cell(130, start, eventsOfToday, resourceBundle);
+
+            if(beforeMonth){
+                c.isDayOfCurrMonth(false);
+            } else c.isDayOfCurrMonth(!afterMonth);
+
+            //popolaGriglia(mesePrima-dayofWeek+count,Cell.ft,tmpCal,Cell.ora,anno,mese-1,eventiVerticali);
+
+            calendar.add(c, i, j);
+
+            if(start.getActualMaximum(DAY_OF_MONTH) == start.get(DAY_OF_MONTH) && beforeMonth){
+                beforeMonth = false;
+            } else if(start.getActualMaximum(DAY_OF_MONTH) == start.get(DAY_OF_MONTH) && !beforeMonth){
+                afterMonth = true;
+            }
+
+            if (i % 7 == 0) {   // last day of the week
+                i = 1;
+                j++;
+            } else {
+                i++;
+            }
+
+            count++;
+            start.add(DATE, 1);
         }
 
         calendar.setAlignment(Pos.TOP_CENTER);
         return calendar;
     }
 
-    private void popolaGriglia(int datesettter,SimpleDateFormat ft,List<Event> tmpCal,SimpleDateFormat ora,int anno,int mese,VBox eventiVerticali){
-
-        for (Event e: tmpCal) {
-            int annoD = Integer.valueOf(ft.format(e.getDay()).substring(0,4));
-            int meseD = Integer.valueOf(ft.format(e.getDay()).substring(5,7));
-            int giornoD = Integer.valueOf(ft.format(e.getDay()).substring(8,10));
-
-            //bruttissimo if che controlla se la data è la seguente
-            //In futuro andra gestito con Date cosi basta solo un compare
-            if (anno == annoD) {
-                if (meseD == mese) {
-                    if (giornoD == datesettter) {
-                        HBox hBoxDay = new HBox();
-                        hBoxDay.setSpacing(5);
-                        String titolo = e.getTitle();
-                        hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
-                        Label impegno = new Label();
-                        Label orario = new Label();
-                        orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
-
-                        if (titolo.length() > 4) {
-                            impegno.setText(titolo.substring(0, 4));
-                        } else {
-                            impegno.setText(e.getTitle());
-                        }
-                        hBoxDay.getChildren().addAll(impegno, orario);
-                        hBoxDay.setAlignment(Pos.CENTER);
-                        eventiVerticali.getChildren().add(hBoxDay);
-
-
-                        hBoxDay.setOnMouseClicked(mouseEvent -> {
-                            Stage mostrami = new Stage();
-                            mostrami.setAlwaysOnTop(true);
-                            mostrami.setTitle(resourceBundle.getString("eventSelected.testo"));
-
-                            BorderPane mostraDati = new BorderPane();
-                            VBox dati = new VBox();
-                            Label nome = new Label();
-                            Label data = new Label();
-                            Label startE = new Label();
-                            Label end = new Label();
-                            Label importanzaE = new Label();
-                            Label coloreE = new Label();
-                            nome.setText(resourceBundle.getString("eventTitle.testo") + ": " + e.getTitle());
-                            data.setText(resourceBundle.getString("eventDate.testo") + ": " + e.getDay().toString());
-                            startE.setText(resourceBundle.getString("eventStart.testo") + ": " + ora.format(e.getStart()));
-                            end.setText(resourceBundle.getString("eventEnd.testo") + ": " + ora.format(e.getEnd()));
-
-                            importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+e.getType().toString());
-                            coloreE.setText("                                                                                                       ");
-                            coloreE.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
-                            dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
-                            mostraDati.setCenter(dati);
-
-                            Scene scenaEvento = new Scene(mostraDati, 400, 100);
-                            mostrami.setScene(scenaEvento);
-
-                            mostrami.initModality(Modality.APPLICATION_MODAL);
-                            mostrami.showAndWait();
-                        });
-
-                    }
-                }
-            }
-        }
-
+    private static String printCalendar(Calendar c) {
+        return Cell.ft.format(c.getTime());
     }
 
     private void newEventModal(LocalDate date,BorderPane setupCalendario) {
