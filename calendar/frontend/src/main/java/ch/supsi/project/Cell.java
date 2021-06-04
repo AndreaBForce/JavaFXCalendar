@@ -1,6 +1,6 @@
 package ch.supsi.project;
 
-import ch.supsi.project.service_layer.Event;
+import ch.supsi.project.model.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
