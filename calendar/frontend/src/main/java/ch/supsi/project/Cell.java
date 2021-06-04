@@ -42,7 +42,6 @@ public class Cell extends StackPane {
         this.num_day = new Label();
 
         r = new Rectangle(size, size);
-        //r = new Rectangle(size, size, size, size);
 
         r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
         r.setFill(Color.WHITE);

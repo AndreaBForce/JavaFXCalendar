@@ -13,8 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -36,7 +33,7 @@ public class MainGUI extends Application {
     ResourceBundle resourceBundle;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         Locale.setDefault(Locale.ENGLISH);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
@@ -45,19 +42,19 @@ public class MainGUI extends Application {
 
         try {
             propietaBuild.load(MainGUI.class.getClassLoader().getResourceAsStream("pom.properties"));
-        }catch(Exception e){}
+        }catch(Exception ignored){}
 
         String NUM_VERSION = propietaBuild.getProperty("project.version");
         String BUILD_DATE = propietaBuild.getProperty("project.build");
         String APP_NAME = "CalendarioRRR";
 
         try {
-            /**
+            /*
              * STAGE PRINCIPALE
              */
-            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + getMeseTradotto().substring(0, 1) + "" + getMeseTradotto().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
+            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + getMeseTradotto().charAt(0) + "" + getMeseTradotto().substring(1).toLowerCase() + " " + dataOra.getYear() + ")");
 
-            /**
+            /*
              * ROOT
              */
             //Inizializzo border pane principale
@@ -65,7 +62,7 @@ public class MainGUI extends Application {
             root.setPrefSize(900, 700);
             //root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"),resourceBundle);
 
-            /**
+            /*
              * TOP
              */
             //creo hbox top con il menu blue nel top border pane
@@ -100,11 +97,11 @@ public class MainGUI extends Application {
 
             //aggiungo il menubar alla parte top del socio
             top.getChildren().addAll(menuBar1, menuBar2, menuBar3);
-            /**
+            /*
              * FINE TOP
              */
 
-            /**
+            /*
              * CENTER
              */
             //Creo bottoni << >>
@@ -124,33 +121,33 @@ public class MainGUI extends Application {
 
             centerMen.getChildren().addAll(monthPrev, monthCurrent, monthNext);
             centerMen.setAlignment(Pos.TOP_CENTER);
-            /**
+            /*
              * FINE CENTER
              */
 
-            /**
+            /*
              * BOTTOM
              */
 
             //Qua avviene la creazione del calendario ovvero con il gridpane di ritorno
             setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
 
-            /**
+            /*
              * FINE BOTTOM
              */
 
             root.setTop(top);
             root.setCenter(centerMen);
             root.setBottom(setupCalendario);
-            /**
+            /*
              * FINE ROOT
              */
 
-            /**
+            /*
              * FINE STAGE PRINCIPALE
              */
 
-            /**
+            /*
              * SCENE
              */
             //mostro la finestra principale
@@ -164,11 +161,11 @@ public class MainGUI extends Application {
             stage.setMaxWidth(980);
 
             stage.show();
-            /**
+            /*
              * FINE SCENE
              */
 
-            /**
+            /*
              * STAGE EXIT
              */
             //Creo parte per gestione del modale dell'exit
@@ -201,11 +198,11 @@ public class MainGUI extends Application {
 
             //scena del meno di exit con annulla e socio
             Scene scenaE = new Scene(exitBorder, 300, 100);
-            /**
+            /*
              * FINE STAGE EXIT
              */
 
-            /**
+            /*
              * STAGE VERSIONE
              */
             //Creo la parte della gestione della versione
@@ -244,14 +241,14 @@ public class MainGUI extends Application {
             borderAbout.setTop(appInfo);
             borderAbout.setCenter(vbAbout);
             Scene aboutScene = new Scene(borderAbout, 400, 150);
-            /**
+            /*
              * FINE STAGE VERSIONE
              */
 
-            /**
+            /*
              * LISTENER
              */
-            /**
+            /*
              * TOP
              */
             menuExit.setOnAction(mouse -> {
@@ -260,9 +257,7 @@ public class MainGUI extends Application {
                 exitStage.showAndWait();
             });
 
-            exitAnnulla.setOnMouseClicked(x -> {
-                exitStage.close();
-            });
+            exitAnnulla.setOnMouseClicked(x -> exitStage.close());
 
             exitEsci.setOnAction(x -> {
                 exitStage.close();
@@ -293,30 +288,24 @@ public class MainGUI extends Application {
 
                 aboutStage.showAndWait();
             });
-            /**
+            /*
              * CENTER
              */
-            EventHandler<MouseEvent> clickNextMonth = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    dataOra = dataOra.plusMonths(1);
-                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
-                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-                }
+            EventHandler<MouseEvent> clickNextMonth = mouseEvent -> {
+                dataOra = dataOra.plusMonths(1);
+                monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             };
 
-            EventHandler<MouseEvent> clickPrevMonth = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    dataOra = dataOra.minusMonths(1);
-                    monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
-                    setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
-                }
+            EventHandler<MouseEvent> clickPrevMonth = mouseEvent -> {
+                dataOra = dataOra.minusMonths(1);
+                monthCurrent.setText(getMeseTradotto() + " " + dataOra.getYear());
+                setupCalendario.setCenter(updateCalendario(calendario,setupCalendario));
             };
 
             monthNext.setOnMouseClicked(clickNextMonth);
             monthPrev.setOnMouseClicked(clickPrevMonth);
-            /**
+            /*
              * FINE LISTENER
              */
 
@@ -355,7 +344,12 @@ public class MainGUI extends Application {
         Calendar start = Calendar.getInstance();
 
         LocalDate date = LocalDate.of(dataOra.getYear(), dataOra.getMonth(), 1);
+
+        start.set(YEAR, date.getYear());
+        start.set(MONTH, date.getMonthValue()-1);
+
         LocalDate firstMonday = date.with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
+
         start.set(DAY_OF_MONTH, firstMonday.getDayOfMonth());
         if(start.get(DAY_OF_MONTH) != 1)
             start.add(DATE, -7);
@@ -366,16 +360,9 @@ public class MainGUI extends Application {
         int j = 1;
         int count = 0;
         while (count < 42) {
-            Calendar dum = Calendar.getInstance();
-
-
             List<Event> eventsOfToday = new ArrayList<>();
             for (Event e : tmpCal) {
-                dum.set(DATE, e.getDay().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfMonth());
-
-                if (dum.get(DAY_OF_MONTH) == start.get(DAY_OF_MONTH)
-                        && dum.get(MONTH) == start.get(MONTH)
-                        && dum.get(YEAR) == start.get(YEAR)){
+                if(Cell.ft.format(e.getDay()).compareTo(Cell.ft.format(start.getTime())) == 0){
                     eventsOfToday.add(e);
                 }
             }
@@ -385,8 +372,6 @@ public class MainGUI extends Application {
             if(beforeMonth){
                 c.isDayOfCurrMonth(false);
             } else c.isDayOfCurrMonth(!afterMonth);
-
-            //popolaGriglia(mesePrima-dayofWeek+count,Cell.ft,tmpCal,Cell.ora,anno,mese-1,eventiVerticali);
 
             calendar.add(c, i, j);
 
@@ -483,13 +468,13 @@ public class MainGUI extends Application {
                 endCheck = true;
             }
         }
-        orari.stream().forEach(c -> appTimepicker.add(format.format(c.getTime())));
+        orari.forEach(c -> appTimepicker.add(format.format(c.getTime())));
 
         Label selezioneOrario = new Label(resourceBundle.getString("eventTimeSelect.testo"));
-        ListView timepickerStart = new ListView(appTimepicker);
-        ListView timepickerEnd = new ListView(appTimepicker);
+        ListView<String> timepickerStart = new ListView<>(appTimepicker);
+        ListView<String> timepickerEnd = new ListView<>(appTimepicker);
 
-        final ObservableList appTypePicker = FXCollections.observableArrayList();
+        final ObservableList<String> appTypePicker = FXCollections.observableArrayList();
 
         //Qua aggiungo gli eventi
         for (EventType e: CalendarController.eventTypeList) {
@@ -497,7 +482,7 @@ public class MainGUI extends Application {
         }
 
         Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
-        ListView typepicker = new ListView(appTypePicker);
+        ListView<String> typepicker = new ListView<>(appTypePicker);
 
         Button create = new Button(resourceBundle.getString("eventCreate.testo"));
 
@@ -510,20 +495,18 @@ public class MainGUI extends Application {
                 //alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
             }else{
-                Date time = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(time);
-                cal.add(Calendar.HOUR_OF_DAY, 3);
-                long start = cal.getTime().getTime();
-                cal.add(Calendar.HOUR_OF_DAY, 3);
-                long end = cal.getTime().getTime();
-                //calendario.addEvent(new Event("testtest",time.getTime(),start,end, eventTypeList.get(1)));
+                Event checker = calendario.addEvent(new Event(
+                        nomeEventoInput.getText(),
+                        Date.from(datePicker.getValue().atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant())
+                            .getTime(),
+                        orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(),
+                        orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(),
+                        CalendarController.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex()))
+                );
 
-                Event checker;
-                checker = calendario.addEvent(new Event(nomeEventoInput.getText(), Date.from(datePicker.getValue().atStartOfDay()
-                        .atZone(ZoneId.systemDefault()).toInstant()).getTime(), orari.get(timepickerStart.getSelectionModel().getSelectedIndex()).getTime().getTime(), orari.get(timepickerEnd.getSelectionModel().getSelectedIndex()).getTime().getTime(), CalendarController.eventTypeList.get(typepicker.getSelectionModel().getSelectedIndex())));
-
-                /**
+                /*
                  * Qua gestione se evento é gia li presente o no
                  */
                 Stage alertStage = new Stage();
