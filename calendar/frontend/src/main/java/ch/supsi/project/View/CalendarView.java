@@ -20,7 +20,7 @@ import java.util.*;
 import static java.util.Calendar.*;
 
 public class CalendarView {
-    static Calendar dataOra = Calendar.getInstance();
+    static public Calendar dataOra = Calendar.getInstance();
     private ResourceBundle resourceBundle;
     private CalendarViewController calendarViewController;
     private HBox moveMonthMenu;

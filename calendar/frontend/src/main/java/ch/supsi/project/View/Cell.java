@@ -44,11 +44,11 @@ public class Cell extends StackPane {
 
         r = new Rectangle(size, size);
 
-        r.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+        r.setStyle("-fx-stroke: black; -fx-stroke-width: 0.5;");
         r.setFill(Color.WHITE);
 
         this.num_day.setStyle("-fx-font-weight: bold");
-        this.num_day.setText(date.get(DAY_OF_MONTH)+"");
+        this.num_day.setText(" "+date.get(DAY_OF_MONTH)+"");
 
         this.casella.setCenter(this.r);
 
@@ -111,7 +111,7 @@ public class Cell extends StackPane {
 
                 importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+e.getType().toString());
                 coloreE.setText("                                                                                                       ");
-                coloreE.setStyle("-fx-background-color: " + e.getType().getColour() + ";");
+                coloreE.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
                 dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);
                 mostraDati.setCenter(dati);
 

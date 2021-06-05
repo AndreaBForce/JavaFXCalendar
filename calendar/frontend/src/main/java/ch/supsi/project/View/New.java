@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class New {
@@ -63,7 +64,10 @@ public class New {
         modalStage.setMinWidth(modal.getPrefWidth());
 
         modalStage.setScene(scene);
-        modalStage.setTitle(date.toString());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        
+        modalStage.setTitle(this.date.format(formatter));
         modalStage.initModality(Modality.WINDOW_MODAL);
 
         TextField nomeEventoInput = new TextField();

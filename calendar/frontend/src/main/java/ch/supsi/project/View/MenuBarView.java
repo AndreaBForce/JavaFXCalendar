@@ -34,7 +34,7 @@ public class MenuBarView {
         top = new HBox();
         top.setPadding(new Insets(5, 5, 5, 5));
         top.setSpacing(10);
-        top.setStyle("-fx-background-color: #336699;");
+        top.setStyle("-fx-background-color: #A0A0A0;");
 
         //Menu tendina file -> exit
         file = new MenuBar();
