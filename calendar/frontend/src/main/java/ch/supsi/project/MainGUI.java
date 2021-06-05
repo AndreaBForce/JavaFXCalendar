@@ -53,11 +53,7 @@ public class MainGUI extends Application {
         }
 
     }
-
-    /*private static String printCalendar(Calendar c) {
-        return Cell.ft.format(c.getTime());
-    }*/
-
+    
     public static void main(String[] args) {
         launch(args);
 

@@ -16,8 +16,7 @@ public class CalendarViewController {
     }
 
     public List<Event> getCalendarByMonth(Date date){
-        //Calendar m1 = Calendar.getInstance(month);
-        return calendario.getCalendar();
+        return calendario.getEventByMonth(date);
     }
 
     public Event addEvent(Event event){
