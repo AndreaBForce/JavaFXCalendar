@@ -68,7 +68,7 @@ public class Cell extends StackPane {
         //da metter qua dentro la gestione migliore della data
         this.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 2) {
-                calendarView.newEventModal();
+                calendarView.newEventModal(date);
             }
         });
 

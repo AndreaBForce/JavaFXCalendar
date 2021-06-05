@@ -32,7 +32,6 @@ public class CalendarView {
         this.resourceBundle = resourceBundle;
 
         calendarViewController = new CalendarViewController();
-        newView = new New(resourceBundle,dataOra,calendarViewController);
 
         //Creo bottoni << >>
         moveMonthMenu = new HBox();
@@ -120,7 +119,9 @@ public class CalendarView {
                 }
             }
 
-            Cell c = new Cell(130, start, eventsOfToday, resourceBundle,this);
+            Calendar cellDate = Calendar.getInstance();
+            cellDate.setTime(start.getTime());
+            Cell c = new Cell(130, cellDate, eventsOfToday, resourceBundle,this);
 
             if(beforeMonth){
                 c.isDayOfCurrMonth(false);
@@ -149,7 +150,8 @@ public class CalendarView {
         return calendarGrid;
     }
 
-    public void newEventModal() {
+    public void newEventModal(Calendar data) {
+        newView = new New(resourceBundle,data,calendarViewController);
         newView.getModalStage().showAndWait();
         calendar.setCenter(updateCalendario());
     }
