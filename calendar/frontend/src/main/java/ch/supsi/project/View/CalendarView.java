@@ -32,7 +32,6 @@ public class CalendarView {
         this.resourceBundle = resourceBundle;
 
         calendarViewController = new CalendarViewController();
-        newView = new New(resourceBundle,dataOra,calendarViewController);
 
         //Creo bottoni << >>
         moveMonthMenu = new HBox();
@@ -149,7 +148,8 @@ public class CalendarView {
         return calendarGrid;
     }
 
-    public void newEventModal() {
+    public void newEventModal(Calendar data) {
+        newView = new New(resourceBundle,data,calendarViewController);
         newView.getModalStage().showAndWait();
         calendar.setCenter(updateCalendario());
     }
