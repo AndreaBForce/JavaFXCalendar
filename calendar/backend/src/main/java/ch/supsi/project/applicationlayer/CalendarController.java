@@ -7,7 +7,9 @@ import ch.supsi.project.model.Type;
 import ch.supsi.project.servicelayer.DataService;
 
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CalendarController {
@@ -40,6 +42,10 @@ public class CalendarController {
 
     public List<Event> getCalendar(){
         return dataService.getCalendar();
+    }
+
+    public List<Event> getEventByMonth(Date date){
+        return dataService.getEventsByMonth(date);
     }
 
     public static EventType getEventType(Type type){

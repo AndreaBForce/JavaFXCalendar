@@ -1,4 +1,4 @@
-package ch.supsi.project;
+package ch.supsi.project.Utils;
 
 import ch.supsi.project.model.Event;
 

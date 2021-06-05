@@ -5,7 +5,9 @@ import ch.supsi.project.datalayer.DataAccess;
 import ch.supsi.project.datalayer.JsonDataAccess;
 import ch.supsi.project.model.Event;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,10 +59,10 @@ public class DataService {
         return event;
     }
 
-    public List<Event> getEventsByMonth(long start, long end){
-        List<Event> tmp = new ArrayList<>();
+    public List<Event> getEventsByMonth(Date date){
+        List<Event> tmp;
 
-        tmp = calendar.stream().filter(e -> e.getDay().getTime() >= start && e.getDay().getTime() <= end).collect(Collectors.toList());
+        tmp = calendar.stream().filter(e -> date.getMonth() == e.getDay().getMonth()).collect(Collectors.toList());
 
         return tmp;
     }
