@@ -95,10 +95,10 @@ public class CalendarView {
 
         Calendar start = Calendar.getInstance();
 
-        LocalDate date = LocalDate.of(dataOra.get(YEAR), dataOra.get(MONTH), 1);
+        LocalDate date = LocalDate.of(dataOra.get(YEAR), dataOra.get(MONTH)+1, 1);
 
         start.set(YEAR, date.getYear());
-        start.set(MONTH, date.getMonthValue());
+        start.set(MONTH, date.getMonthValue()-1);
 
         LocalDate firstMonday = date.with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
 
