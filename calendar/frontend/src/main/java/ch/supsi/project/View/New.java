@@ -1,5 +1,6 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
+import ch.supsi.project.Controller.CalendarViewController;
 import ch.supsi.project.applicationlayer.CalendarController;
 import ch.supsi.project.model.Event;
 import ch.supsi.project.model.EventType;

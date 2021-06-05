@@ -1,5 +1,6 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
+import ch.supsi.project.MainGUI;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

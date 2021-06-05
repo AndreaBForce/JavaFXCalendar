@@ -1,5 +1,6 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
+import ch.supsi.project.View.CalendarView;
 import ch.supsi.project.model.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -33,7 +34,7 @@ public class Cell extends StackPane {
     public static SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd");
     public static SimpleDateFormat ora = new SimpleDateFormat("HH:mm");
 
-    public Cell(double size, Calendar date, List<Event> events, ResourceBundle resourceBundle){
+    public Cell(double size, Calendar date, List<Event> events, ResourceBundle resourceBundle, CalendarView calendarView){
         this.resourceBundle = resourceBundle;
 
         this.casella = new BorderPane();
@@ -66,7 +67,7 @@ public class Cell extends StackPane {
         //da metter qua dentro la gestione migliore della data
         this.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 2) {
-                //newEventModal(date.getTime(),setupCalendario);
+                calendarView.newEventModal();
             }
         });
 

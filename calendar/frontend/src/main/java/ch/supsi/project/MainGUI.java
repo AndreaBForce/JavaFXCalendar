@@ -1,22 +1,12 @@
 package ch.supsi.project;
 
-import ch.supsi.project.applicationlayer.CalendarController;
-import ch.supsi.project.model.EventType;
+import ch.supsi.project.View.CalendarView;
+import ch.supsi.project.View.MenuBarView;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 import static java.util.Calendar.*;
@@ -64,9 +54,9 @@ public class MainGUI extends Application {
 
     }
 
-    private static String printCalendar(Calendar c) {
+    /*private static String printCalendar(Calendar c) {
         return Cell.ft.format(c.getTime());
-    }
+    }*/
 
     public static void main(String[] args) {
         launch(args);

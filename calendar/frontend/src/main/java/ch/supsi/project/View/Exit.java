@@ -1,4 +1,4 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

@@ -1,4 +1,4 @@
-package ch.supsi.project;
+package ch.supsi.project.Controller;
 
 import ch.supsi.project.applicationlayer.CalendarController;
 import ch.supsi.project.model.Event;

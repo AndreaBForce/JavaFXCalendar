@@ -1,4 +1,4 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Menu;

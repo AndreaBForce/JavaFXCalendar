@@ -1,26 +1,19 @@
-package ch.supsi.project;
+package ch.supsi.project.View;
 
-import ch.supsi.project.applicationlayer.CalendarController;
+import ch.supsi.project.Controller.CalendarViewController;
+import ch.supsi.project.Utils.DateComparator;
 import ch.supsi.project.model.Event;
-import ch.supsi.project.model.EventType;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -106,7 +99,7 @@ public class CalendarView {
         LocalDate date = LocalDate.of(dataOra.get(YEAR), dataOra.get(MONTH), 1);
 
         start.set(YEAR, date.getYear());
-        start.set(MONTH, date.getMonthValue()-1);
+        start.set(MONTH, date.getMonthValue());
 
         LocalDate firstMonday = date.with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
 
@@ -127,7 +120,7 @@ public class CalendarView {
                 }
             }
 
-            Cell c = new Cell(130, start, eventsOfToday, resourceBundle);
+            Cell c = new Cell(130, start, eventsOfToday, resourceBundle,this);
 
             if(beforeMonth){
                 c.isDayOfCurrMonth(false);
