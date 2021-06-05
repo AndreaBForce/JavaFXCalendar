@@ -119,7 +119,9 @@ public class CalendarView {
                 }
             }
 
-            Cell c = new Cell(130, start, eventsOfToday, resourceBundle,this);
+            Calendar cellDate = Calendar.getInstance();
+            cellDate.setTime(start.getTime());
+            Cell c = new Cell(130, cellDate, eventsOfToday, resourceBundle,this);
 
             if(beforeMonth){
                 c.isDayOfCurrMonth(false);

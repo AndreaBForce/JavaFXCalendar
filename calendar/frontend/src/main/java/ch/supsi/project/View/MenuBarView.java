@@ -7,6 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class MenuBarView {
@@ -82,7 +83,7 @@ public class MenuBarView {
         });
 
         menuNew.setOnAction(mouse -> {
-            calendarView.newEventModal();
+            calendarView.newEventModal(Calendar.getInstance());
         });
 
         menuAbout.setOnAction(x -> {
