@@ -86,7 +86,7 @@ public class CalendarView {
 
         for (int i = 0; i < daysOfTheWeek.length; i++) {
             daysOfTheWeek[i].setStyle("-fx-font-weight: bold");
-            daysOfTheWeek[i].setFont(new Font("Arial", 15));
+            daysOfTheWeek[i].setFont(new Font("Courier", 15));
 
             calendarGrid.add(daysOfTheWeek[i], i+1, 0);
         }

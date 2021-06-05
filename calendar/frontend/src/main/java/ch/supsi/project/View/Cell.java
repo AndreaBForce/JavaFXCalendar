@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -74,11 +75,14 @@ public class Cell extends StackPane {
 
         for (Event e : events) {
             HBox hBoxDay = new HBox();
-            hBoxDay.setSpacing(5);
+            hBoxDay.setSpacing(2);
             String titolo = e.getTitle();
             hBoxDay.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
             Label impegno = new Label();
             Label orario = new Label();
+
+            impegno.setFont(new Font("Courier", 11.5));
+            orario.setFont(new Font("Courier", 11.5));
             orario.setText(" " + ora.format(e.getStart()) + " - " + ora.format(e.getEnd()));
 
             if (titolo.length() > 4) {
