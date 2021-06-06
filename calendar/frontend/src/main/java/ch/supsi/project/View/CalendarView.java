@@ -42,7 +42,7 @@ public class CalendarView {
         Button monthNext = new Button();
         monthCurrent = new Label();
 
-        monthCurrent.setText(getMeseTradotto() + " " + dataOra.get(Calendar.YEAR));
+        monthCurrent.setText(getMeseStampare() + " " + dataOra.get(Calendar.YEAR));
         monthCurrent.setFont(new Font("Arial", 20));
 
         monthNext.setText(">>");
@@ -158,19 +158,20 @@ public class CalendarView {
 
     public void nextMonth(){
         dataOra.add(MONTH,1);
-        monthCurrent.setText(getMeseTradotto()  + " " + dataOra.get(YEAR));
+        monthCurrent.setText(getMeseStampare()  + " " + dataOra.get(YEAR));
         calendar.setCenter(updateCalendario());
     }
 
     public void prevMonth(){
         dataOra.add(MONTH, -1);
-        monthCurrent.setText(getMeseTradotto() + " " + dataOra.get(YEAR));
+        monthCurrent.setText(getMeseStampare() + " " + dataOra.get(YEAR));
         calendar.setCenter(updateCalendario());
     }
 
-    public String getMeseTradotto(){
+    public String getMeseStampare(){
         String mese = getMonthToInt(dataOra.get(Calendar.MONTH));
-        return resourceBundle.getString(mese+".testo");
+        return mese.substring(0,1).toUpperCase() + mese.substring(1);
+        //return resourceBundle.getString(mese+".testo");
     }
 
     private String getMonthToInt(int num) {

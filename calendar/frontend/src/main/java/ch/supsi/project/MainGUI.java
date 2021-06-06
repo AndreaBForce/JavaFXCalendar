@@ -18,7 +18,7 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage stage){
-        Locale.setDefault(Locale.ENGLISH);
+        Locale.setDefault(Locale.ITALIAN);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
 
         try {
@@ -30,7 +30,7 @@ public class MainGUI extends Application {
 
             menuBarView = new MenuBarView(resourceBundle,stage,calendarView);
 
-            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + calendarView.getMeseTradotto().charAt(0) + "" + calendarView.getMeseTradotto().substring(1).toLowerCase() + " " + calendarView.dataOra.get(YEAR) + ")");
+            stage.setTitle(resourceBundle.getString("stageTitle.testo") + " (" + calendarView.getMeseStampare().charAt(0) + "" + calendarView.getMeseStampare().substring(1).toLowerCase() + " " + calendarView.dataOra.get(YEAR) + ")");
 
             root.setTop(menuBarView.getTop());
             root.setCenter(calendarView.getMoveMonthMenu());
