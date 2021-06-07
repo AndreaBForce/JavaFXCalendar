@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -52,12 +49,15 @@ public class Settings {
         VBox settings = new VBox();
         HBox casella1 = new HBox();
         HBox casella2 = new HBox();
+        HBox casellaDir = new HBox();
+        HBox casellaSave = new HBox();
 
         Label lin = new Label();
         Label filesal = new Label();
+        TextField textFieldPercoso = new TextField();
 
-        lin.setText(resourceBundle.getString("labelLingua.testo")+" ");
-        filesal.setText(resourceBundle.getString("labelType.testo")+" ");
+        lin.setText(resourceBundle.getString("labelLingua.testo")+"  ");
+        filesal.setText(resourceBundle.getString("labelType.testo")+": ");
 
         casella1.getChildren().addAll(lin,lingua);
         casella2.getChildren().addAll(filesal,fileType);
@@ -80,24 +80,29 @@ public class Settings {
         Button button = new Button(resourceBundle.getString("buttonDir.testo"));
         button.setOnAction(e -> {
             File selectedDirectory = directoryChooser.showDialog(stage);
-
-            System.out.println(selectedDirectory.getAbsolutePath());
+            textFieldPercoso.setText(selectedDirectory.getAbsolutePath());
         });
 
 
         Button buttonSalva = new Button(resourceBundle.getString("buttonS.testo"));
-        button.setOnAction(e -> {
+
+        buttonSalva.setOnAction(e -> {
 
         });
 
+        casellaDir.getChildren().addAll(textFieldPercoso,button);
+        casellaSave.getChildren().addAll(buttonSalva);
 
-        settings.getChildren().addAll(casella1,casella2,button);
+        casellaDir.setAlignment(Pos.TOP_CENTER);
+        casellaSave.setAlignment(Pos.CENTER);
+
+        settings.getChildren().addAll(casella1,casella2,casellaDir,casellaSave);
 
 
 
         settingsBorder.setCenter(settings);
 
-        Scene setting = new Scene(settingsBorder, 400, 400);
+        Scene setting = new Scene(settingsBorder, 300, 300);
 
         stage.setScene(setting);
     }
