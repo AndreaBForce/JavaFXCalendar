@@ -5,9 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,31 +32,34 @@ public class Settings {
 
 
         BorderPane settingsBorder = new BorderPane();
-        //TODO ENG IT
-        //TODO SOCIO SIIOCI CSV
-        //PATH FILE?
+
         final ObservableList<String> lingue = FXCollections.observableArrayList();
         lingue.add("ENG");
         lingue.add("IT");
         ComboBox<String> lingua = new ComboBox<>(lingue);
+        lingua.getSelectionModel().select(preferencesService.getLanguage());
 
         final ObservableList<String> fileExt = FXCollections.observableArrayList();
         fileExt.add("CSV");
         fileExt.add("JSON");
         ComboBox<String> fileType = new ComboBox<>(fileExt);
+        fileType.getSelectionModel().select(preferencesService.getExtension());
 
         VBox settings = new VBox();
         HBox casella1 = new HBox();
         HBox casella2 = new HBox();
+        HBox casellaDir = new HBox();
+        HBox casellaSave = new HBox();
 
         Label lin = new Label();
         Label filesal = new Label();
+        TextField textFieldPercoso = new TextField();
 
-        lin.setText(resourceBundle.getString("labelLingua.testo")+" ");
-        filesal.setText(resourceBundle.getString("labelType.testo")+" ");
+        lin.setText(resourceBundle.getString("labelLingua.testo") + "  ");
+        filesal.setText(resourceBundle.getString("labelType.testo") + ": ");
 
-        casella1.getChildren().addAll(lin,lingua);
-        casella2.getChildren().addAll(filesal,fileType);
+        casella1.getChildren().addAll(lin, lingua);
+        casella2.getChildren().addAll(filesal, fileType);
 
         casella1.setSpacing(20);
         casella2.setSpacing(20);
@@ -76,26 +77,34 @@ public class Settings {
         Button button = new Button(resourceBundle.getString("buttonDir.testo"));
         button.setOnAction(e -> {
             File selectedDirectory = directoryChooser.showDialog(stage);
-
-            System.out.println(selectedDirectory.getAbsolutePath());
+            textFieldPercoso.setText(selectedDirectory.getAbsolutePath());
         });
 
-        String language = "";
-        String extension = "";
-        String path = "";
 
         Button buttonSalva = new Button(resourceBundle.getString("buttonS.testo"));
+
         buttonSalva.setOnAction(e -> {
 
-            preferencesService.setPreferences(language,extension,path);
+            final String language = lingua.getSelectionModel().getSelectedItem();
+            final String extension = fileType.getSelectionModel().getSelectedItem();
+            final String path = textFieldPercoso.getText();
 
+            preferencesService.setPreferences(language, extension, path);
+
+            stage.close();
         });
 
-        settings.getChildren().addAll(casella1,casella2,button);
+        casellaDir.getChildren().addAll(textFieldPercoso, button);
+        casellaSave.getChildren().addAll(buttonSalva);
+
+        casellaDir.setAlignment(Pos.TOP_CENTER);
+        casellaSave.setAlignment(Pos.CENTER);
+
+        settings.getChildren().addAll(casella1, casella2, casellaDir, casellaSave);
 
         settingsBorder.setCenter(settings);
 
-        Scene setting = new Scene(settingsBorder, 400, 400);
+        Scene setting = new Scene(settingsBorder, 300, 250);
 
         stage.setScene(setting);
     }
@@ -104,7 +113,7 @@ public class Settings {
         return stage;
     }
 
-    public boolean isExist(){
+    public boolean isExist() {
         return preferencesService.isExist();
     }
 
