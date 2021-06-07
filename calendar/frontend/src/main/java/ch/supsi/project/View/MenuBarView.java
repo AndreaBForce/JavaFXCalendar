@@ -22,8 +22,6 @@ public class MenuBarView {
     private Stage principalStage;
     private CalendarView calendarView;
 
-
-
     public MenuBarView(ResourceBundle resourceBundle, Stage principalStage, CalendarView calendarView){
         this.resourceBundle = resourceBundle;
         this.principalStage = principalStage;
@@ -37,10 +35,9 @@ public class MenuBarView {
             settings.getStage().showAndWait();
 
             if(!settings.isExist()){
-                principalStage.close();
+                System.exit(1);
             }
         }
-
 
         top = new HBox();
         top.setPadding(new Insets(5, 5, 5, 5));
