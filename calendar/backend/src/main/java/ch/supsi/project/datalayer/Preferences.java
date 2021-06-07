@@ -6,15 +6,16 @@ import java.util.Scanner;
 
 public class Preferences {
     private String path;
-    private String language;
-    private String extension;
-    private String storePath;
+    private String language = "";
+    private String extension = "";
+    private String storePath = "";
     private File storePreferences;
+    private String OpSystem;
     private boolean exist;
 
     public Preferences() {
         path = System.getProperty("user.home");
-        String OpSystem = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+        OpSystem = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
 
         if ((OpSystem.contains("mac")) || (OpSystem.contains("darwin"))) {
             path = path + "/Library/Application Support/.calendar";
@@ -49,8 +50,17 @@ public class Preferences {
                 }
             }
 
+            String cd;
+            if ((OpSystem.contains("mac")) || (OpSystem.contains("darwin"))) {
+                cd = "/";
+            } else if (OpSystem.contains("win")) {
+                cd = "\\";
+            } else {
+                cd = "/";
+            }
+
             try (FileWriter file = new FileWriter(storePreferences)) {
-                String str = String.format("%s\n%s\n%s\n", language, extension, path);
+                String str = String.format("%s\n%s\n%s\n", language, extension, (path+cd));
                 file.write(str);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -71,6 +81,7 @@ public class Preferences {
 
         try(Scanner scanner = new Scanner(storePreferences)) {
             language = scanner.nextLine();
+            extension = scanner.nextLine();
             path = scanner.nextLine();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

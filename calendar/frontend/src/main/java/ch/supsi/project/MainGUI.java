@@ -21,8 +21,21 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage stage){
-        Locale.setDefault(Locale.ITALIAN);
+        Locale.setDefault(Locale.ENGLISH);
         resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
+
+        preferencesService = new PreferencesService();
+        if(preferencesService.isExist()){
+            switch (preferencesService.getLanguage()){
+                case "ENG":
+                    Locale.setDefault(Locale.ENGLISH);
+                    break;
+                case "IT":
+                    Locale.setDefault(Locale.ITALIAN);
+                    break;
+            }
+            resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
+        }
 
         try {
             //Inizializzo border pane principale

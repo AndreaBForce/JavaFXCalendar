@@ -25,7 +25,7 @@ import java.util.*;
 
 public class New {
     private ResourceBundle resourceBundle;
-    private AlertView alertView;
+    private AlertEvent alertView;
     private LocalDate date;
     private CalendarViewController calendarViewController;
     private Stage modalStage;
@@ -39,7 +39,7 @@ public class New {
 
         modalStage = new Stage();
 
-        alertView = new AlertView(resourceBundle,modalStage);
+        alertView = new AlertEvent(resourceBundle);
 
         GridPane modal = new GridPane();
         modal.setPrefSize(600, 600);

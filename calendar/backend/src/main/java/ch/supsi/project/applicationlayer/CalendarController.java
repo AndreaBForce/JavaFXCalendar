@@ -25,8 +25,8 @@ public class CalendarController {
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
     }
 
-    public CalendarController(PreferencesService preferencesService){
-        dataService = new DataService(preferencesService.getPath(), preferencesService.getExtension());
+    public CalendarController(){
+        dataService = new DataService();
     }
 
     public Event addEvent(Event event){

@@ -23,7 +23,6 @@ import static java.util.Calendar.*;
 public class CalendarView {
     static public Calendar dataOra = Calendar.getInstance();
     private ResourceBundle resourceBundle;
-    private PreferencesService preferencesService;
     private CalendarViewController calendarViewController;
     private HBox moveMonthMenu;
     private BorderPane calendar;
@@ -33,7 +32,7 @@ public class CalendarView {
     public CalendarView(ResourceBundle resourceBundle){
         this.resourceBundle = resourceBundle;
 
-        //calendarViewController = new CalendarViewController(preferencesService);
+        calendarViewController = new CalendarViewController();
 
         //Creo bottoni << >>
         moveMonthMenu = new HBox();
@@ -54,7 +53,6 @@ public class CalendarView {
         moveMonthMenu.setAlignment(Pos.TOP_CENTER);
 
         calendar = new BorderPane();
-
         calendar.setCenter(updateCalendario());
 
         EventHandler<MouseEvent> clickNextMonth = mouseEvent -> {
@@ -67,12 +65,6 @@ public class CalendarView {
 
         monthNext.setOnMouseClicked(clickNextMonth);
         monthPrev.setOnMouseClicked(clickPrevMonth);
-    }
-
-    public void setPreferencesService(PreferencesService preferencesService) {
-        this.preferencesService = preferencesService;
-
-        calendarViewController = new CalendarViewController(preferencesService);
     }
 
     private GridPane updateCalendario() {

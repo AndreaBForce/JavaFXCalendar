@@ -11,8 +11,8 @@ import java.util.List;
 public class CalendarViewController {
     private CalendarController calendario;
 
-    public CalendarViewController(PreferencesService preferencesService){
-        calendario = new CalendarController(preferencesService);
+    public CalendarViewController(){
+        calendario = new CalendarController();
 
     }
 

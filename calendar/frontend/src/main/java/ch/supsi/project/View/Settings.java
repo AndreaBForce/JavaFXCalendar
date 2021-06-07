@@ -54,6 +54,7 @@ public class Settings {
         Label lin = new Label();
         Label filesal = new Label();
         TextField textFieldPercoso = new TextField();
+        textFieldPercoso.setText(preferencesService.getPath());
 
         lin.setText(resourceBundle.getString("labelLingua.testo") + "  ");
         filesal.setText(resourceBundle.getString("labelType.testo") + ": ");
@@ -91,6 +92,9 @@ public class Settings {
 
             preferencesService.setPreferences(language, extension, path);
 
+            AlertClose alertClose = new AlertClose(resourceBundle);
+            alertClose.getAlert().showAndWait();
+
             stage.close();
         });
 
@@ -117,7 +121,4 @@ public class Settings {
         return preferencesService.isExist();
     }
 
-    public PreferencesService getPreferencesService() {
-        return preferencesService;
-    }
 }

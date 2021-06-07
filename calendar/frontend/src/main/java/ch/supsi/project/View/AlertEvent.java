@@ -6,12 +6,12 @@ import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
 
-public class AlertView {
+public class AlertEvent {
     private ResourceBundle resourceBundle;
     private Alert alert;
     private Stage alertStage;
 
-    public AlertView(ResourceBundle resourceBundle, Stage modalStage) {
+    public AlertEvent(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         alert = new Alert(Alert.AlertType.WARNING, resourceBundle.getString("eventAlert.testo"));

@@ -15,20 +15,27 @@ public class DataService {
     private List<Event> calendar;
     private DataAccess dataAccess;
 
-    public DataService(String inputFile, String type){
-        switch (type){
-            case "CSV":
-                dataAccess = new CsvDataAccess(inputFile);
-                break;
-            case "JSON":
-                dataAccess = new JsonDataAccess(inputFile);
-                break;
-            default:
-                System.out.println("File non riconosciuto");
-                throw new IllegalArgumentException("File non riconosciuto");
-        }
+    public DataService(){
+        PreferencesService preferencesService = new PreferencesService();
+        String inputFile = preferencesService.getPath();
+        String type = preferencesService.getExtension();
+        calendar = new ArrayList<>();
 
-        calendar = dataAccess.read();
+        if(preferencesService.isExist()){
+            switch (type){
+                case "CSV":
+                    dataAccess = new CsvDataAccess(inputFile + "data" + ".csv");
+                    break;
+                case "JSON":
+                    dataAccess = new JsonDataAccess(inputFile + "data" + ".json");
+                    break;
+                default:
+                    System.out.println("File non riconosciuto");
+                    throw new IllegalArgumentException("File non riconosciuto");
+            }
+
+            calendar = dataAccess.read();
+        }
     }
 
     public Event addEvent(Event event){

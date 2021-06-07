@@ -1,9 +1,11 @@
 package ch.supsi.project.View;
 
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -30,14 +32,18 @@ public class MenuBarView {
         exit = new Exit(resourceBundle);
         about = new About(resourceBundle);
         settings = new Settings(resourceBundle);
-        calendarView.setPreferencesService(settings.getPreferencesService());
 
         if(!settings.isExist()){
             settings.getStage().showAndWait();
 
             if(!settings.isExist()){
                 System.exit(1);
+            }else{
+                AlertClose alertClose = new AlertClose(resourceBundle);
+                alertClose.getAlert().showAndWait();
+                System.exit(0);
             }
+
         }
 
         top = new HBox();
