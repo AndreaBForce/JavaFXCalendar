@@ -35,6 +35,10 @@ public class MenuBarView {
 
         if(!settings.isExist()){
             settings.getStage().showAndWait();
+
+            if(!settings.isExist()){
+                principalStage.close();
+            }
         }
 
 
