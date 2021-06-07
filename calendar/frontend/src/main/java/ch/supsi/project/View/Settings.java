@@ -83,10 +83,15 @@ public class Settings {
             textFieldPercoso.setText(selectedDirectory.getAbsolutePath());
         });
 
+        String language = "";
+        String extension = "";
+        String path = "";
 
         Button buttonSalva = new Button(resourceBundle.getString("buttonS.testo"));
 
         buttonSalva.setOnAction(e -> {
+
+            preferencesService.setPreferences(language,extension,path);
 
         });
 
