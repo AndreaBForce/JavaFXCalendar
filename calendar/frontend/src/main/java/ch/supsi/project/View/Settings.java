@@ -84,9 +84,14 @@ public class Settings {
             System.out.println(selectedDirectory.getAbsolutePath());
         });
 
+        String language = "";
+        String extension = "";
+        String path = "";
 
         Button buttonSalva = new Button(resourceBundle.getString("buttonS.testo"));
         button.setOnAction(e -> {
+
+            preferencesService.setPreferences(language,extension,path);
 
         });
 

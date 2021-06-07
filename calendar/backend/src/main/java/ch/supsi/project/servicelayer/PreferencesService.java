@@ -9,7 +9,7 @@ public class PreferencesService {
         this.preferences = new Preferences();
     }
 
-    public void setPreferences(String language, String path){
+    public void setPreferences(String language, String extension, String path){
         preferences.writePreferences(language,path);
     }
 
