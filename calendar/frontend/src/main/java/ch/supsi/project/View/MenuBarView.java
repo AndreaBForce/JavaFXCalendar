@@ -18,6 +18,7 @@ public class MenuBarView {
     private MenuBar help;
     private Exit exit;
     private About about;
+    private Settings settings;
     private Stage principalStage;
     private CalendarView calendarView;
 
@@ -30,6 +31,11 @@ public class MenuBarView {
 
         exit = new Exit(resourceBundle);
         about = new About(resourceBundle);
+        settings = new Settings(resourceBundle);
+
+        if(!settings.isExist()){
+            settings.getStage().showAndWait();
+        }
 
 
         top = new HBox();
@@ -42,6 +48,8 @@ public class MenuBarView {
         Menu menuFile = new Menu(resourceBundle.getString("menuFile.testo"));
         MenuItem menuExit = new MenuItem(resourceBundle.getString("menuExit.testo"));
         menuFile.getItems().add(menuExit);
+        MenuItem menuPref = new MenuItem(resourceBundle.getString("menuPref.testo"));
+        menuFile.getItems().add(menuPref);
         file.getMenus().add(menuFile);
 
         //Menu tendina edit -> new.. edit->previous edit->next
@@ -70,6 +78,10 @@ public class MenuBarView {
             if(exit.isEnd()){
                 principalStage.close();
             }
+        });
+
+        menuPref.setOnAction(mouse -> {
+            settings.getStage().showAndWait();
         });
 
         //action event dei menu

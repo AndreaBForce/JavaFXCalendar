@@ -6,8 +6,6 @@ import ch.supsi.project.model.EventType;
 import ch.supsi.project.model.Type;
 import ch.supsi.project.servicelayer.DataService;
 
-
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
