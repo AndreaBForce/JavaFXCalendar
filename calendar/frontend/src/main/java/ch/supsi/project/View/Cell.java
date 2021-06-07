@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static java.util.Calendar.DAY_OF_MONTH;
@@ -113,7 +114,7 @@ public class Cell extends StackPane {
                 startE.setText(resourceBundle.getString("eventStart.testo") + ": " + ora.format(e.getStart()));
                 end.setText(resourceBundle.getString("eventEnd.testo") + ": " + ora.format(e.getEnd()));
 
-                importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+e.getType().toString());
+                importanzaE.setText(resourceBundle.getString("eventType.testo") + ": "+resourceBundle.getString(e.getType().toString().toLowerCase(Locale.ROOT)+".testo"));
                 coloreE.setText("                                                                                                       ");
                 coloreE.setStyle("-fx-background-color: " + e.getType().getColour().getHexCode() + ";");
                 dati.getChildren().addAll(nome, data, startE, end, importanzaE,coloreE);

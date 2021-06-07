@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -114,6 +115,39 @@ public class New {
 
         Label selezioneTipoEvento = new Label(resourceBundle.getString("eventTypeSelect.testo"));
         ListView<String> typepicker = new ListView<>(appTypePicker);
+
+        typepicker.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            int i = -1;
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setText(null);
+                        }else {
+                            setText(item);
+
+                            if(i == -1){
+                                i++;
+                            }else if(i < CalendarController.eventTypeList.size()) {
+                                EventType e = CalendarController.eventTypeList.get(i);
+                                System.out.println(item+e.getDescription() + e.getColour().getHexCode());
+                                setStyle("-fx-control-inner-background:" + e.getColour().getHexCode() + ";");
+                                i++;
+
+                            }
+
+
+
+                        }
+
+                    }
+                };
+            }
+        });
 
         Button create = new Button(resourceBundle.getString("eventCreate.testo"));
 
