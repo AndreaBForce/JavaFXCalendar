@@ -34,8 +34,10 @@ public class Settings {
         BorderPane settingsBorder = new BorderPane();
 
         final ObservableList<String> lingue = FXCollections.observableArrayList();
-        lingue.add("ENG");
+        lingue.add("EN");
         lingue.add("IT");
+        lingue.add("DE");
+        lingue.add("FR");
         ComboBox<String> lingua = new ComboBox<>(lingue);
         lingua.getSelectionModel().select(preferencesService.getLanguage());
 

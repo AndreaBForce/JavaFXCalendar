@@ -27,12 +27,19 @@ public class MainGUI extends Application {
         preferencesService = new PreferencesService();
         if(preferencesService.isExist()){
             switch (preferencesService.getLanguage()){
-                case "ENG":
+                case "EN":
                     Locale.setDefault(Locale.ENGLISH);
                     break;
                 case "IT":
                     Locale.setDefault(Locale.ITALIAN);
                     break;
+                case "DE":
+                    Locale.setDefault(Locale.GERMAN);
+                    break;
+                case "FR":
+                    Locale.setDefault(Locale.FRANCE);
+                    break;
+
             }
             resourceBundle = ResourceBundle.getBundle("i18n/stringhe");
         }
