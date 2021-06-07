@@ -40,7 +40,7 @@ public class MenuBarView {
                 System.exit(1);
             }else{
                 AlertClose alertClose = new AlertClose(resourceBundle);
-                alertClose.getAlert().showAndWait();
+                alertClose.getAlert().show();
                 System.exit(0);
             }
 

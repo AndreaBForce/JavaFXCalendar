@@ -95,7 +95,7 @@ public class Settings {
             preferencesService.setPreferences(language, extension, path);
 
             AlertClose alertClose = new AlertClose(resourceBundle);
-            alertClose.getAlert().showAndWait();
+            alertClose.getAlert().show();
 
             stage.close();
         });

@@ -157,7 +157,7 @@ public class New {
                     || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
                     || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()) {
 
-                alertView.getAlert().showAndWait();
+                alertView.getStage().showAndWait();
             } else {
                 Event checker = calendarViewController.addEvent(new Event(
                         nomeEventoInput.getText(),
@@ -192,15 +192,15 @@ public class New {
 
                 exitEsci.setOnAction(x -> {
                     modalStage.close();
-                    alertView.getAlert().close();
+                    alertView.getStage().close();
                 });
 
                 //scena del meno di exit con annulla e socio
                 Scene scenaE = new Scene(exitBorder, 400, 100);
 
                 if (checker == null) {
-                    alertView.getAlert().setScene(scenaE);
-                    alertView.getAlert().showAndWait();
+                    alertView.getStage().setScene(scenaE);
+                    alertView.getStage().showAndWait();
                     modalStage.close();
                 }
                 modalStage.close();
