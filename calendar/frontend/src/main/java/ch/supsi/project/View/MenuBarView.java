@@ -30,6 +30,7 @@ public class MenuBarView {
         exit = new Exit(resourceBundle);
         about = new About(resourceBundle);
         settings = new Settings(resourceBundle);
+        calendarView.setPreferencesService(settings.getPreferencesService());
 
         if(!settings.isExist()){
             settings.getStage().showAndWait();

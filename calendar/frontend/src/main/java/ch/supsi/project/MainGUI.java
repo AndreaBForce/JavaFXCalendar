@@ -2,6 +2,8 @@ package ch.supsi.project;
 
 import ch.supsi.project.View.CalendarView;
 import ch.supsi.project.View.MenuBarView;
+import ch.supsi.project.datalayer.Preferences;
+import ch.supsi.project.servicelayer.PreferencesService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -13,6 +15,7 @@ import static java.util.Calendar.*;
 
 public class MainGUI extends Application {
     private ResourceBundle resourceBundle;
+    private PreferencesService preferencesService;
     private MenuBarView menuBarView;
     private CalendarView calendarView;
 

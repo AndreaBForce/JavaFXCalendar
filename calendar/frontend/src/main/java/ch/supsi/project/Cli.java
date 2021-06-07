@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Cli {
     public static void main(String[] args) {
-        CalendarController calendarContainer = new CalendarController("Prova.csv", "CSV");
+        //CalendarController calendarContainer = new CalendarController("Prova.csv", "CSV");
         List<EventType> eventTypeList = new ArrayList<>();
 
         eventTypeList.add(new EventType(Type.LECTION, Colour.BLUE));
@@ -36,9 +36,9 @@ public class Cli {
         calendarContainer.addEvent(new Event("4",time.getTime(),start,end, eventTypeList.get(3)));
         calendarContainer.addEvent(new Event("5",time.getTime(),start,end, eventTypeList.get(4)));*/
 
-        List<Event> list = calendarContainer.getCalendar();
+        //List<Event> list = calendarContainer.getCalendar();
 
-        list.forEach(System.out::println);
+        //list.forEach(System.out::println);
 
     }
 }

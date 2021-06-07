@@ -5,6 +5,7 @@ import ch.supsi.project.model.Event;
 import ch.supsi.project.model.EventType;
 import ch.supsi.project.model.Type;
 import ch.supsi.project.servicelayer.DataService;
+import ch.supsi.project.servicelayer.PreferencesService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,8 +25,8 @@ public class CalendarController {
         eventTypeList.add(new EventType(Type.OTHERS, Colour.PURPLE));
     }
 
-    public CalendarController(String inputFile, String type){
-        dataService = new DataService(inputFile,type);
+    public CalendarController(PreferencesService preferencesService){
+        dataService = new DataService(preferencesService.getPath(), preferencesService.getExtension());
     }
 
     public Event addEvent(Event event){

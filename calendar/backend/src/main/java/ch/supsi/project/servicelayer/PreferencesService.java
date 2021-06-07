@@ -10,10 +10,22 @@ public class PreferencesService {
     }
 
     public void setPreferences(String language, String extension, String path){
-        preferences.writePreferences(language,path);
+        preferences.writePreferences(language,extension,path);
     }
 
     public boolean isExist() {
         return preferences.isExist();
+    }
+
+    public String getExtension() {
+        return preferences.getExtension();
+    }
+
+    public String getLanguage() {
+        return preferences.getLanguage();
+    }
+
+    public String getPath() {
+        return preferences.getPath();
     }
 }

@@ -3,6 +3,7 @@ package ch.supsi.project.View;
 import ch.supsi.project.Controller.CalendarViewController;
 import ch.supsi.project.Utils.DateComparator;
 import ch.supsi.project.model.Event;
+import ch.supsi.project.servicelayer.PreferencesService;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,6 +23,7 @@ import static java.util.Calendar.*;
 public class CalendarView {
     static public Calendar dataOra = Calendar.getInstance();
     private ResourceBundle resourceBundle;
+    private PreferencesService preferencesService;
     private CalendarViewController calendarViewController;
     private HBox moveMonthMenu;
     private BorderPane calendar;
@@ -31,7 +33,7 @@ public class CalendarView {
     public CalendarView(ResourceBundle resourceBundle){
         this.resourceBundle = resourceBundle;
 
-        calendarViewController = new CalendarViewController();
+        //calendarViewController = new CalendarViewController(preferencesService);
 
         //Creo bottoni << >>
         moveMonthMenu = new HBox();
@@ -65,6 +67,12 @@ public class CalendarView {
 
         monthNext.setOnMouseClicked(clickNextMonth);
         monthPrev.setOnMouseClicked(clickPrevMonth);
+    }
+
+    public void setPreferencesService(PreferencesService preferencesService) {
+        this.preferencesService = preferencesService;
+
+        calendarViewController = new CalendarViewController(preferencesService);
     }
 
     private GridPane updateCalendario() {

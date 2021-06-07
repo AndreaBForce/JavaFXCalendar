@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Settings {
@@ -73,8 +71,6 @@ public class Settings {
 
         String dir = System.getProperty("user.home");
 
-        String OpSystem = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-
         directoryChooser.setInitialDirectory(new File(dir));
 
         Button button = new Button(resourceBundle.getString("buttonDir.testo"));
@@ -89,16 +85,13 @@ public class Settings {
         String path = "";
 
         Button buttonSalva = new Button(resourceBundle.getString("buttonS.testo"));
-        button.setOnAction(e -> {
+        buttonSalva.setOnAction(e -> {
 
             preferencesService.setPreferences(language,extension,path);
 
         });
 
-
         settings.getChildren().addAll(casella1,casella2,button);
-
-
 
         settingsBorder.setCenter(settings);
 
@@ -113,5 +106,9 @@ public class Settings {
 
     public boolean isExist(){
         return preferencesService.isExist();
+    }
+
+    public PreferencesService getPreferencesService() {
+        return preferencesService;
     }
 }
