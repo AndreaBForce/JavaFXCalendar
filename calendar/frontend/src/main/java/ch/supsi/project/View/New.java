@@ -134,7 +134,7 @@ public class New {
                                 i++;
                             }else if(i < CalendarController.eventTypeList.size()) {
                                 EventType e = CalendarController.eventTypeList.get(i);
-                                System.out.println(item+e.getDescription() + e.getColour().getHexCode());
+
                                 setStyle("-fx-control-inner-background:" + e.getColour().getHexCode() + ";");
                                 i++;
 
