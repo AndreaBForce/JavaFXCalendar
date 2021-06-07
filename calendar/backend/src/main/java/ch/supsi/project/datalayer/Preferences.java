@@ -32,23 +32,25 @@ public class Preferences {
         if(storePreferences.exists()){
             readPreferences();
         }else{
-            try {
-                storePreferences.createNewFile();
-                exist = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            exist = false;
         }
     }
 
     public void writePreferences(String language, String path){
+        if(!storePreferences.exists()){
+            try {
+                storePreferences.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try(FileWriter file = new FileWriter(storePreferences)) {
             String str = String.format("%s\n%s\n",language,path);
             file.write(str);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void readPreferences(){
