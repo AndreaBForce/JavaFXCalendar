@@ -157,7 +157,9 @@ public class New {
                     || timepickerStart.getSelectionModel().selectionModeProperty().isNull().get()
                     || timepickerEnd.getSelectionModel().selectionModeProperty().isNull().get()) {
 
-                alertView.getStage().showAndWait();
+                AlertEmpty alertEmpty = new AlertEmpty(resourceBundle);
+                alertEmpty.getAlertEmpty().show();
+
             } else {
                 Event checker = calendarViewController.addEvent(new Event(
                         nomeEventoInput.getText(),
